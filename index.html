@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark light">
+<meta name="description" content="studio212 — a digital practice building worlds for artists, venues, and creative businesses.">
+<title>studio212</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne+Mono&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#131619;
+  --hi:#c8bca8;
+  --text-2:#8c8680;
+  --text-3:#6a6158;
+  --moss:#6b8c52;
+  --violet:#8b6914;
+  --line:#22272d;
+  --theme-dur:.6s;
+  --mono:'Syne Mono',monospace;
+  --display:'Syne',sans-serif;
+}
+html{background:#131619 !important}
+html[data-theme="light"]{background:#f0e5d5 !important}
+html,body{
+  background:var(--ink);
+  color:var(--hi);
+  font-family:var(--mono);
+  height:100%;
+  overflow:hidden;
+  position:relative;
+  transition:background .6s,color .6s;
+}
+
+/* grain */
+#grain{position:fixed;inset:0;z-index:900;pointer-events:none;opacity:.18;mix-blend-mode:overlay}
+
+/* orb */
+#orb{
+  position:fixed;
+  width:min(640px,90vw);height:min(640px,90vw);
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(215,100,30,.48) 0%,transparent 70%);
+  filter:blur(56px);
+  bottom:-12%;left:-12%;
+  pointer-events:none;
+  z-index:0;
+  animation:ob 13s ease-in-out infinite alternate;
+}
+@keyframes ob{from{transform:translate(0,0) scale(1)}to{transform:translate(48px,-32px) scale(1.1)}}
+
+/* sigil */
+#sigil{
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:1;
+  opacity:.9;
+}
+
+/* layout */
+#stage{
+  position:fixed;inset:0;
+  z-index:10;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:clamp(32px,5vh,64px) clamp(24px,5vw,64px);
+}
+
+/* logo */
+.logo{
+  font-family:var(--mono);
+  font-size:clamp(11px,1.1vw,14px);
+  letter-spacing:.14em;
+  color:var(--hi);
+  margin-bottom:clamp(40px,7vh,72px);
+  opacity:0;
+  animation:fadeup .8s cubic-bezier(.16,1,.3,1) forwards .2s;
+}
+
+/* headline */
+.headline{
+  font-family:var(--display);
+  font-weight:800;
+  font-size:clamp(36px,8vw,110px);
+  line-height:.97;
+  letter-spacing:-.03em;
+  color:var(--hi);
+  opacity:0;
+  animation:fadeup .9s cubic-bezier(.16,1,.3,1) forwards .4s;
+}
+.headline .accent{color:var(--moss)}
+.headline .gold{color:var(--violet)}
+
+/* sub */
+.sub{
+  font-size:clamp(11px,.95vw,13px);
+  line-height:1.85;
+  color:var(--text-2);
+  max-width:46ch;
+  margin-top:clamp(20px,3.2vh,32px);
+  opacity:0;
+  animation:fadeup .9s cubic-bezier(.16,1,.3,1) forwards .6s;
+}
+
+/* divider */
+.divider{
+  width:100%;
+  height:1px;
+  background:var(--line);
+  margin:clamp(28px,4.5vh,48px) 0;
+  opacity:0;
+  animation:fadeup .8s cubic-bezier(.16,1,.3,1) forwards .75s;
+}
+
+/* link row */
+.link-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:clamp(12px,2vh,20px);
+  opacity:0;
+  animation:fadeup .8s cubic-bezier(.16,1,.3,1) forwards .9s;
+}
+
+.eyebrow{
+  font-size:clamp(7px,.68vw,9px);
+  letter-spacing:.4em;
+  text-transform:uppercase;
+  color:var(--text-3);
+}
+
+/* THE link */
+.brief-link{
+  font-family:var(--mono);
+  font-size:clamp(7px,.68vw,9px);
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:var(--text-3);
+  text-decoration:none;
+  border:1px solid var(--line);
+  padding:clamp(10px,1.8vh,16px) clamp(20px,3.2vw,36px);
+  display:inline-flex;align-items:center;gap:12px;
+  transition:border-color .25s,color .25s,background .25s;
+  position:relative;
+  overflow:hidden;
+}
+.brief-link::before{
+  content:'';
+  position:absolute;inset:0;
+  background:var(--moss);
+  transform:translateX(-101%);
+  transition:transform .4s cubic-bezier(.77,0,.18,1);
+  z-index:0;
+}
+.brief-link:hover::before{transform:translateX(0)}
+.brief-link:hover{color:var(--ink);border-color:var(--moss)}
+.brief-link span{position:relative;z-index:1}
+.brief-link .arrow{
+  position:relative;z-index:1;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+  font-size:.8em;
+}
+.brief-link:hover .arrow{transform:translateX(4px)}
+
+/* ghost ː */
+.ghost{
+  position:fixed;
+  right:-0.04em;top:50%;
+  font-family:var(--mono);
+  font-size:clamp(200px,36vw,520px);
+  line-height:1;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(237,232,224,.018);
+  transform:translateY(-52%);
+  pointer-events:none;
+  user-select:none;
+  z-index:2;
+}
+
+/* searchlight */
+#searchlight{
+  position:fixed;
+  width:140px;height:140px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(237,232,224,.025) 0%,transparent 70%);
+  pointer-events:none;
+  z-index:850;
+  transform:translate(-50%,-50%);
+}
+
+@keyframes fadeup{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:none}
+}
+
+html[data-theme="light"]{
+  --ink:    #f0e5d5;
+  --hi:     #1e2028;
+  --text-2: #2e3038;
+  --text-3: #72604e;
+  --line:   #c0b09c;
+  --moss:   #4e7236;
+  --violet: #7a5810;
+}
+html.theme-transitioning *{transition:border-color .6s ease,color .6s ease,background-color .6s ease !important}
+
+/* ── TOGGLE ── */
+#theme-toggle{
+  position:fixed;top:clamp(16px,2.5vh,28px);right:clamp(24px,5vw,64px);
+  z-index:950;
+  background:none;border:1px solid var(--text-3);border-radius:20px;
+  padding:5px 11px;cursor:pointer;
+  display:flex;align-items:center;gap:8px;
+  transition:border-color .25s,background .25s;
+}
+html[data-theme="light"] #theme-toggle{border-color:var(--text-3);transition:background .25s}
+.toggle-track{width:26px;height:14px;border-radius:7px;background:var(--text-3);position:relative;transition:background .6s}
+html[data-theme="light"] .toggle-track{background:#4e7236}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:var(--ink);transition:transform .6s cubic-bezier(.34,1.56,.64,1),background .6s}
+html[data-theme="light"] .toggle-thumb{transform:translateX(12px)}
+.toggle-label{font-family:var(--mono);font-size:clamp(6px,.65vw,8px);letter-spacing:.28em;text-transform:uppercase;color:var(--text-3);transition:color .6s}
+
+/* light mode orb */
+html[data-theme="light"] #orb{background:radial-gradient(circle,rgba(215,100,30,.18) 0%,transparent 70%)}
+
+/* light mode sigil */
+html[data-theme="light"] #sigil{opacity:.9}
+
+/* light mode ghost */
+html[data-theme="light"] .ghost{-webkit-text-stroke:1px rgba(26,18,8,.045)}
+
+/* light mode divider */
+html[data-theme="light"] .divider{background:var(--line)}
+
+/* light mode link */
+html[data-theme="light"] .brief-link{border-color:var(--line);color:var(--text-3)}
+html[data-theme="light"] .brief-link:hover{color:var(--ink)}
+
+/* light vignette */
+#light-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 20%,rgba(140,110,75,.28) 100%);opacity:0;transition:opacity .6s}
+html[data-theme="light"] #light-vignette{opacity:1}
+</style>
+</head>
+<body>
+
+<canvas id="grain" aria-hidden="true"></canvas>
+<div id="orb" aria-hidden="true"></div>
+<canvas id="sigil" aria-hidden="true"></canvas>
+<div class="ghost" aria-hidden="true">ː</div>
+<div id="searchlight" aria-hidden="true"></div>
+<div id="light-vignette" aria-hidden="true"></div>
+<button id="theme-toggle" aria-label="toggle theme">
+  <div class="toggle-track"><div class="toggle-thumb"></div></div>
+  <span class="toggle-label" id="toggle-label">light</span>
+</button>
+
+<div id="stage">
+  <div class="logo">studio212</div>
+
+  <h1 class="headline">
+    building <span class="accent">worlds</span><br>
+    from the inside out<span class="gold">.</span>
+  </h1>
+
+  <p class="sub">a digital practice. websites and experiences built for artists, venues, and creative businesses — the ones where how something looks is part of what it means.</p>
+
+  <div class="divider"></div>
+
+  <div class="link-row">
+    <span class="eyebrow">something is being built here</span>
+    <a href="/sitebrief" class="brief-link">
+      <span>submit a brief</span>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+</div>
+
+<script>
+/* ── THEME ── */
+const html=document.documentElement;
+const toggleBtn=document.getElementById('theme-toggle');
+const toggleLabel=document.getElementById('toggle-label');
+function setTheme(t){
+  html.classList.add('theme-transitioning');
+  html.setAttribute('data-theme',t);
+  toggleLabel.textContent=t==='dark'?'light':'dark';
+  localStorage.setItem('s212-theme',t);
+  setTimeout(()=>html.classList.remove('theme-transitioning'),650);
+}
+(()=>{const s=localStorage.getItem('s212-theme');if(s)setTheme(s);})();
+toggleBtn.addEventListener('click',()=>setTheme(html.getAttribute('data-theme')==='dark'?'light':'dark'));
+
+
+/* ── GRAIN ── */
+(()=>{
+  const cv=document.getElementById('grain');
+  const ctx=cv.getContext('2d');
+  const DPR=Math.min(window.devicePixelRatio||1,2);
+  let W,H,imgData,buf32,phase=0;
+  function resize(){
+    W=cv.width=Math.round(window.innerWidth*DPR);
+    H=cv.height=Math.round(window.innerHeight*DPR);
+    imgData=ctx.createImageData(W,H);
+    buf32=new Uint32Array(imgData.data.buffer);
+  }
+  resize();
+  window.addEventListener('resize',resize,{passive:true});
+  let f=0;
+  (function tick(){
+    requestAnimationFrame(tick);
+    if(++f%3!==0)return;
+    phase+=0.00004;
+    const b=Math.sin(phase)*4;
+    for(let i=0,l=buf32.length;i<l;i++){
+      const v=Math.random()*255|0;
+      buf32[i]=(255<<24)|(Math.max(0,v-12-(b*.5))<<16)|(Math.min(255,v+2+(b*.3))<<8)|Math.min(255,v+8+b);
+    }
+    ctx.putImageData(imgData,0,0);
+  })();
+})();
+
+/* ── SIGIL ── */
+(()=>{
+  const cv=document.getElementById('sigil');
+  const ctx=cv.getContext('2d');
+  const DPR=Math.min(window.devicePixelRatio||1,2);
+  let angle=0;
+  function resize(){
+    cv.width=Math.round(window.innerWidth*DPR);
+    cv.height=Math.round(window.innerHeight*DPR);
+    cv.style.width=window.innerWidth+'px';
+    cv.style.height=window.innerHeight+'px';
+  }
+  resize();
+  window.addEventListener('resize',resize,{passive:true});
+  (function draw(){
+    const W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);
+    const cx=W*.5,cy=H*.5;
+    const R=Math.min(W,H)*.38;
+    const base='237,232,224';
+    const strokeA=0.07;
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(angle);
+    const drawCircle=(x,y,r)=>{
+      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+      const isLight=html.getAttribute('data-theme')==='light';
+      const base2=isLight?'26,18,8':'237,232,224';
+      const strokeA2=isLight?0.16:0.07;
+      ctx.strokeStyle=`rgba(${base2},${strokeA2})`;
+      ctx.lineWidth=DPR*.5;ctx.stroke();
+    };
+    const off=R*.5;
+    drawCircle(0,0,R);
+    drawCircle(-off,0,R);
+    drawCircle(off,0,R);
+    drawCircle(0,0,R*.2);
+    ctx.restore();
+    angle+=0.0000873;
+    requestAnimationFrame(draw);
+  })();
+})();
+
+/* ── SEARCHLIGHT ── */
+(()=>{
+  const orb=document.getElementById('searchlight');
+  let tx=window.innerWidth*.5,ty=window.innerHeight*.5;
+  let cx=tx,cy=ty;
+  let driftT=0,driftActive=false,driftTimer=null;
+  const phaseX=Math.random()*Math.PI*2,phaseY=Math.random()*Math.PI*2;
+
+  function resetDrift(){
+    driftActive=false;
+    clearTimeout(driftTimer);
+    driftTimer=setTimeout(()=>{driftActive=true;},2700);
+  }
+  window.addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY;resetDrift();},{passive:true});
+  window.addEventListener('touchmove',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;resetDrift();},{passive:true});
+
+  (function loop(){
+    if(driftActive){
+      driftT+=0.0003;
+      tx=window.innerWidth*.5+Math.sin(driftT+phaseX)*window.innerWidth*.3;
+      ty=window.innerHeight*.5+Math.cos(driftT*.7+phaseY)*window.innerHeight*.3;
+    }
+    cx+=(tx-cx)*.06;
+    cy+=(ty-cy)*.06;
+    orb.style.left=Math.round(cx)+'px';
+    orb.style.top=Math.round(cy)+'px';
+    requestAnimationFrame(loop);
+  })();
+  resetDrift();
+})();
+
+/* ── GHOST PARALLAX ── */
+const ghost=document.querySelector('.ghost');
+window.addEventListener('scroll',()=>{
+  ghost.style.transform=`translateY(calc(-52% + ${window.scrollY*.16}px))`;
+},{passive:true});
+</script>
+</body>
+</html>
