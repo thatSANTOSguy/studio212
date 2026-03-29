@@ -691,10 +691,10 @@ function setTheme(t){
   html.classList.add('theme-transitioning');
   html.setAttribute('data-theme',t);
   toggleLabel.textContent=t==='dark'?'light':'dark';
-  localStorage.setItem('sb-brief-theme',t);
+  localStorage.setItem('s212-theme',t);
   setTimeout(()=>html.classList.remove('theme-transitioning'),650);
 }
-(()=>{const s=localStorage.getItem('sb-brief-theme');if(s)setTheme(s);})();
+(()=>{const s=localStorage.getItem('s212-theme');if(s)setTheme(s);})();
 toggleBtn.addEventListener('click',()=>setTheme(html.getAttribute('data-theme')==='dark'?'light':'dark'));
 
 /* ── PROGRESS ── */
