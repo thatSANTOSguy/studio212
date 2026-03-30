@@ -61,13 +61,14 @@ html[data-theme="light"] #light-lamp{opacity:1}
 
 /* ── NAV ── */
 nav{
-  position:sticky;top:0;z-index:100;
+  position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;justify-content:space-between;align-items:center;
   padding:clamp(14px,2.2vh,22px) var(--px);
   border-bottom:1px solid var(--line);
   background:var(--ink);
   transition:background var(--theme-dur),border-color var(--theme-dur);
 }
+.progress-wrap{position:fixed;top:var(--nav-h,56px);left:0;right:0;z-index:99;height:2px;background:var(--line);transition:background var(--theme-dur)}
 .nav-logo{font-family:var(--mono);font-size:clamp(11px,1.1vw,14px);letter-spacing:.14em;color:var(--hi);transition:color var(--theme-dur)}
 .nav-right{display:flex;align-items:center;gap:clamp(12px,2vw,24px)}
 .nav-progress{font-size:clamp(7px,.68vw,9px);letter-spacing:.3em;text-transform:uppercase;color:var(--text-3);transition:color var(--theme-dur)}
@@ -82,11 +83,11 @@ html[data-theme="light"] .toggle-thumb{transform:translateX(12px)}
 .toggle-label{font-family:var(--mono);font-size:clamp(6px,.65vw,8px);letter-spacing:.28em;text-transform:uppercase;color:var(--text-3);transition:color var(--theme-dur)}
 
 /* ── PROGRESS BAR ── */
-.progress-wrap{height:2px;background:var(--line);transition:background var(--theme-dur)}
+/* progress bar — fixed below nav */
 .progress-bar{height:2px;background:var(--moss);width:0%;transition:width .5s cubic-bezier(.77,0,.18,1)}
 
 /* ── LAYOUT ── */
-main{max-width:720px;margin:0 auto;padding:clamp(48px,8vh,96px) var(--px) clamp(80px,14vh,160px)}
+main{max-width:720px;margin:0 auto;padding:clamp(80px,14vh,120px) var(--px) clamp(80px,14vh,160px)}
 
 /* ── SECTION HEADERS ── */
 .section-head{
@@ -683,6 +684,14 @@ select{
 
 <script>
 const html=document.documentElement;
+// measure nav height for progress bar offset
+(()=>{
+  const nav=document.querySelector('nav');
+  if(!nav)return;
+  const setH=()=>html.style.setProperty('--nav-h',nav.offsetHeight+'px');
+  setH();
+  window.addEventListener('resize',setH,{passive:true});
+})();
 
 /* ── THEME ── */
 const toggleBtn=document.getElementById('theme-toggle');
