@@ -119,6 +119,13 @@ body.cacc #c-ring{border-color:var(--moss);width:44px;height:44px}
   padding:0;
 }
 .modal-close:hover{color:var(--hi)}
+.modal-ext{
+  font-family:var(--mono);font-size:clamp(11px,1vw,14px);
+  letter-spacing:.14em;color:var(--text-2);
+  text-decoration:none;cursor:none;pointer-events:all;
+  transition:color .2s;
+}
+.modal-ext:hover{color:var(--hi)}
 
 .modal-body{
   flex:1;overflow:hidden;
@@ -301,7 +308,7 @@ html[data-theme="light"] #light-lamp{opacity:1}
 #work{padding:var(--py) var(--px) clamp(60px,10vh,120px);background:var(--ink);transition:background var(--theme-dur)}
 .wk-head{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:clamp(20px,3.2vh,32px);border-bottom:1px solid var(--line);margin-bottom:0;transition:border-color var(--theme-dur)}
 .wk-divider{display:flex;align-items:center;gap:16px;padding:clamp(14px,2vh,20px) 0;border-bottom:1px solid var(--line);transition:border-color var(--theme-dur)}
-.wk-divider span{font-family:var(--mono);font-size:clamp(7px,.7vw,9px);letter-spacing:.5em;text-transform:uppercase;color:var(--violet);opacity:.7;transition:color var(--theme-dur)}
+.wk-divider span{font-family:var(--mono);font-size:clamp(9px,.85vw,11px);letter-spacing:.4em;text-transform:uppercase;color:var(--violet);opacity:.7;transition:color var(--theme-dur)}
 .wk-label{font-family:var(--mono);font-size:clamp(7px,.7vw,9px);letter-spacing:.5em;text-transform:uppercase;color:var(--text-3);transition:color var(--theme-dur)}
 .wk-count{font-family:var(--mono);font-size:clamp(7px,.7vw,9px);letter-spacing:.22em;color:var(--text-3);transition:color var(--theme-dur)}
 .proj-row{display:grid;grid-template-columns:clamp(28px,3vw,48px) 1fr clamp(100px,16vw,200px) clamp(28px,2.8vw,44px);align-items:start;gap:clamp(14px,2.5vw,28px);padding:clamp(16px,2.2vh,24px) 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;cursor:none;position:relative;overflow:visible;transition:border-color var(--theme-dur)}
@@ -594,9 +601,14 @@ footer p{font-family:var(--mono);font-size:clamp(6px,.62vw,7.5px);letter-spacing
 <div id="curtain"></div>
 
 <!-- ── PROJECT MODAL ── -->
+<!-- preload iframes — run in background, swapped into modal on open -->
+<div id="preload-frames" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;pointer-events:none;opacity:0;visibility:hidden;" aria-hidden="true">
+  <iframe id="pf-3" src="https://santosblu.com" allow="autoplay; fullscreen; gyroscope; accelerometer; device-orientation" title="preload-santosblu"></iframe>
+</div>
+
 <div id="proj-modal" role="dialog" aria-modal="true" aria-label="Project detail">
   <div class="modal-banner">
-    <span class="modal-studio">studio212</span>
+    <a class="modal-ext" id="modal-ext" href="#" target="_blank" rel="noopener" aria-label="Open in new tab">open in new tab ↗</a>
     <span class="modal-title" id="modal-title-label"></span>
     <button class="modal-close" id="modal-close" aria-label="Close">× close</button>
   </div>
@@ -627,7 +639,7 @@ END EASTER EGGS -->
   <a href="#" class="n-logo">studio212</a>
   <div class="n-links">
     <a href="#work">work</a>
-    <a href="#void">signal</a>
+    <!-- <a href="#void">signal</a> -->
     <a href="#about">about</a>
     <a href="#contact">contact</a>
     <!-- EASTER EGG: <div id="egg-counter"></div> -->
@@ -654,8 +666,8 @@ END EASTER EGGS -->
       <span class="word"><span class="char plain">o</span><span class="char plain">u</span><span class="char plain">t</span><span class="char accent" style="color:var(--violet)">.</span></span>
     </h1>
     <div class="h-foot" id="h-foot">
-      <p class="h-desc">studio212 builds worlds for artists, venues, and creative businesses that care about what something looks like.</p>
-      <a href="/sitebrief" class="brief-link">
+      <p class="h-desc">studio212 builds worlds for artists, venues, and creative businesses that value aesthetic communication.</p>
+      <a href="https://studio212.xyz/sitebrief" target="_blank" rel="noopener" class="brief-link">
         <span>submit a brief</span>
         <span class="arrow">→</span>
       </a>
@@ -706,7 +718,7 @@ END EASTER EGGS -->
     <div>
       <div class="pr-name" data-reveal="wipe" data-d="2">santos <em>bluː</em></div>
       <div class="pr-tags" data-reveal="scatter" data-d="2"><span class="pr-tag">Artist Site</span><span class="pr-tag">Atmospheric</span><span class="pr-tag">Personal</span></div>
-      <div class="pr-oneliner" data-reveal="rise" data-d="3">An atmospheric artist world — WebGL shader, vinyl stack player, locked archive.</div>
+      <div class="pr-oneliner" data-reveal="rise" data-d="3">An atmospheric artist portal — gradual sunrise WebGL shader animation, audio player, locked archive.</div>
     </div>
     <div></div>
     <div class="pr-arrow" data-reveal="rise" data-d="2">—</div>
@@ -720,7 +732,7 @@ END EASTER EGGS -->
     <div>
       <div class="pr-name" data-reveal="wipe"><em>Arc</em>etype</div>
       <div class="pr-tags" data-reveal="scatter"><span class="pr-tag">Fashion Brand</span><span class="pr-tag">Canvas UX</span><span class="pr-tag">E-commerce</span></div>
-      <div class="pr-oneliner" data-reveal="rise" data-d="2">A full brand world for a London fashion label — canvas-rendered, no standard grid.</div>
+      <div class="pr-oneliner" data-reveal="rise" data-d="2">A London fashion label platform — custom spray paint mechanic, Shopify integrated, concept-first design.</div>
     </div>
     <div></div>
     <div class="pr-arrow" data-reveal="rise" data-d="2">—</div>
@@ -731,7 +743,7 @@ END EASTER EGGS -->
     <div>
       <div class="pr-name" data-reveal="wipe" data-d="3"><em>earth</em>town</div>
       <div class="pr-tags" data-reveal="scatter" data-d="3"><span class="pr-tag">Social Platform</span><span class="pr-tag">Chatroom</span><span class="pr-tag">Arts Collective</span></div>
-      <div class="pr-oneliner" data-reveal="rise" data-d="4">A social space for an arts collective — the chatroom is the centre of gravity.</div>
+      <div class="pr-oneliner" data-reveal="rise" data-d="4">A community portal for an arts collective — accounts, avatars, uploads, and a chatroom at the centre.</div>
     </div>
     <div></div>
     <div class="pr-arrow" data-reveal="rise" data-d="2">—</div>
@@ -809,7 +821,7 @@ END EASTER EGG -->
     <span class="split-reveal"><span class="inner"><em>touch.</em></span></span>
   </h2>
   <p class="ct-note" data-reveal="rise" data-d="1">A small number of projects at a time — enough to give each one the attention it deserves. If something here resonates, reach out.</p>
-  <a href="/sitebrief" class="brief-link" data-reveal="rise" data-d="2">
+  <a href="https://studio212.xyz/sitebrief" target="_blank" rel="noopener" class="brief-link" data-reveal="rise" data-d="2">
     <span>submit a brief</span>
     <span class="arrow">→</span>
   </a>
@@ -1346,6 +1358,8 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
     if(!p)return;
 
     titleLbl.textContent=`${p.num} — ${p.label}`;
+    const extLink=document.getElementById('modal-ext');
+    if(extLink)extLink.href=p.url;
 
     const ucBanner = p.underConstruction
       ? `<div style="position:relative;z-index:10;background:var(--ink);border-bottom:1px solid var(--line)">
@@ -1375,16 +1389,17 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
          </div>`
       : '';
 
-    body.innerHTML=`
-      <div style="position:relative;flex:1;display:flex;flex-direction:column">
-        ${ucBanner}
-        <iframe
-          src="${p.url}"
-          style="width:100%;flex:1;border:none;display:block"
-          allow="autoplay; fullscreen"
-          title="${p.label}"
-        ></iframe>
-      </div>`;
+    const preloaded = document.getElementById(`pf-${id}`);
+    const iframeEl = preloaded
+      ? preloaded
+      : document.createElement('iframe');
+    iframeEl.style.cssText='width:100%;flex:1;border:none;display:block';
+    iframeEl.allow='autoplay; fullscreen; gyroscope; accelerometer; device-orientation';
+    iframeEl.title=p.label;
+    if(!preloaded) iframeEl.src=p.url;
+
+    body.innerHTML=`<div style="position:relative;flex:1;display:flex;flex-direction:column">${ucBanner}</div>`;
+    body.querySelector('div').appendChild(iframeEl);
 
     // wire up toggle if present
     if(p.underConstruction){
@@ -1407,9 +1422,16 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
   /* ── close ── */
   function closeModal(){
     modal.classList.remove('open');
-    // unload iframe so it stops running in background
     const iframe=body.querySelector('iframe');
-    if(iframe)iframe.src='';
+    if(iframe){
+      const holder=document.getElementById('preload-frames');
+      if(iframe.id && iframe.id.startsWith('pf-') && holder){
+        holder.appendChild(iframe); // move back before clearing
+      } else {
+        iframe.src='';
+      }
+    }
+    while(body.firstChild)body.removeChild(body.firstChild); // safe clear
     document.body.style.overflow='';
     document.title='studio212';
   }
