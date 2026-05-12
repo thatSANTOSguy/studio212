@@ -1447,6 +1447,23 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
   /* ── close triggers ── */
   closeBtn.addEventListener('click',closeModal);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeModal();});
+
+  /* ── GYRO BRIDGE — handle permission request from iframe ── */
+  window.addEventListener('message', async e => {
+    if(e.data?.type !== 'REQUEST_GYRO') return;
+    try {
+      const state = await DeviceOrientationEvent.requestPermission();
+      if(state === 'granted'){
+        // post grant back to whichever iframe sent the request
+        const iframe = document.querySelector('#modal-body iframe, #preload-frames iframe');
+        if(iframe?.contentWindow) iframe.contentWindow.postMessage({type:'GYRO_GRANTED'},'*');
+      }
+    } catch(err){
+      // not iOS or already granted — send grant anyway
+      const iframe = document.querySelector('#modal-body iframe, #preload-frames iframe');
+      if(iframe?.contentWindow) iframe.contentWindow.postMessage({type:'GYRO_GRANTED'},'*');
+    }
+  });
   modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
 })();
 
