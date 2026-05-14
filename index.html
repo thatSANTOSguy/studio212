@@ -572,6 +572,40 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
   letter-spacing:.01em;
   line-height:1.8;
 }
+/* ── SHADER SCRUBBER ── */
+#shader-ctrl{
+  position:absolute;bottom:0;left:0;right:0;z-index:10;
+  display:flex;align-items:center;gap:10px;
+  padding:10px clamp(14px,3vw,28px);
+  background:linear-gradient(to top,var(--ink) 60%,transparent);
+  pointer-events:all;
+}
+#sc-scrub{
+  flex:1;-webkit-appearance:none;appearance:none;
+  height:2px;background:var(--line);border-radius:1px;outline:none;cursor:none;
+}
+#sc-scrub::-webkit-slider-thumb{
+  -webkit-appearance:none;width:10px;height:10px;border-radius:50%;
+  background:var(--bone);cursor:none;
+}
+#sc-scrub::-moz-range-thumb{
+  width:10px;height:10px;border-radius:50%;border:none;
+  background:var(--bone);cursor:none;
+}
+#sc-playpause,#sc-speed{
+  background:none;border:none;cursor:none;
+  font-family:var(--mono);font-size:clamp(8px,.75vw,10px);
+  letter-spacing:.14em;color:var(--text-2);
+  transition:color .2s;padding:0;flex-shrink:0;
+}
+#sc-speed{appearance:none;-webkit-appearance:none;}
+#sc-playpause:hover,#sc-speed:hover{color:var(--bone)}
+#sc-time{
+  font-family:var(--mono);font-size:clamp(7px,.65vw,9px);
+  letter-spacing:.14em;color:var(--text-3);flex-shrink:0;
+  transition:color var(--theme-dur);min-width:3ch;text-align:right;
+}
+
 /* the light — barely there, no visible shape */
 #ink-orb{
   position:fixed;
@@ -1345,7 +1379,7 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
       building:['Final aesthetic refinement','Refine customising interface','Campaign editorial pages']
     },
     2:{num:'02',label:'Osquello',url:'https://osquello.com',underConstruction:false},
-    3:{num:'03',label:'santos bluː',url:'https://santosblu.com',underConstruction:false},
+    3:{num:'03',label:'santos bluː',url:'https://santosblu.com',underConstruction:false,shaderControl:true},
     4:{num:'04',label:'Earthtown',url:'https://thatsantosguy.github.io/earthtown/index.html',underConstruction:true,
       description:'A community portal for an artist collective, designed as a shared space for music, visuals, launches, and exclusive content. Users can create accounts, customise avatars, and upload their own material, which is then reviewed and curated by administrators.',
       ready:['Chat room infrastructure — shared audio players and file uploads','Member profiles and avatar generator','Content upload system and admin framework infrastructure'],
@@ -1405,7 +1439,26 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
     if(!preloaded) iframeEl.src=p.url;
 
     body.innerHTML=`<div style="position:relative;flex:1;display:flex;flex-direction:column">${ucBanner}</div>`;
-    body.querySelector('div').appendChild(iframeEl);
+    const bodyDiv=body.querySelector('div');
+    bodyDiv.appendChild(iframeEl);
+
+    if(p.shaderControl){
+      const ctrl=document.createElement('div');
+      ctrl.id='shader-ctrl';
+      ctrl.innerHTML=`
+        <button id="sc-playpause" aria-label="Play/pause">▶</button>
+        <input id="sc-scrub" type="range" min="0" max="540" step="0.5" value="0" aria-label="Scrub time">
+        <span id="sc-time">0:00</span>
+        <select id="sc-speed" aria-label="Speed">
+          <option value="0.25">0.25×</option>
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+          <option value="5">5×</option>
+        </select>`;
+      bodyDiv.appendChild(ctrl);
+      initShaderClock(iframeEl);
+    }
 
     // wire up toggle if present
     if(p.underConstruction){
@@ -1425,8 +1478,48 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
     document.title=`${p.label} — studio212`;
   }
 
+  /* ── shader clock ── */
+  let _shaderRaf=null;
+  function initShaderClock(iframe){
+    let time=0, playing=false, speed=1, lastTs=null;
+    const scrub=document.getElementById('sc-scrub');
+    const btn=document.getElementById('sc-playpause');
+    const timeEl=document.getElementById('sc-time');
+    const speedEl=document.getElementById('sc-speed');
+
+    function post(t){ iframe.contentWindow?.postMessage({type:'scrub',time:t},'https://santosblu.com'); }
+    function fmt(t){ const m=Math.floor(t/60),s=Math.floor(t%60); return `${m}:${s.toString().padStart(2,'0')}`; }
+
+    function tick(ts){
+      if(playing){
+        if(lastTs!=null) time=Math.min(parseFloat(scrub.max), time+(ts-lastTs)/1000*speed);
+        lastTs=ts;
+        scrub.value=time;
+        timeEl.textContent=fmt(time);
+        post(time);
+        _shaderRaf=requestAnimationFrame(tick);
+      }
+    }
+
+    btn.addEventListener('click',()=>{
+      playing=!playing;
+      btn.textContent=playing?'⏸':'▶';
+      if(playing){ lastTs=null; _shaderRaf=requestAnimationFrame(tick); }
+      else{ cancelAnimationFrame(_shaderRaf); _shaderRaf=null; }
+    });
+
+    scrub.addEventListener('input',()=>{
+      time=parseFloat(scrub.value);
+      timeEl.textContent=fmt(time);
+      post(time);
+    });
+
+    speedEl.addEventListener('change',()=>{ speed=parseFloat(speedEl.value); });
+  }
+
   /* ── close ── */
   function closeModal(){
+    if(_shaderRaf){cancelAnimationFrame(_shaderRaf);_shaderRaf=null;}
     modal.classList.remove('open');
     const iframe=body.querySelector('iframe');
     if(iframe){
