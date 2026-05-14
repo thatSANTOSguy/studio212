@@ -330,13 +330,16 @@ html[data-theme="light"] #light-lamp{opacity:1}
 
 /* ── UNDER CONSTRUCTION PULL-DOWN ── */
 .uc-drawer{
-  position:relative;z-index:9;
-  background:var(--faint);
-  overflow:hidden;
-  max-height:0;
-  transition:max-height .5s cubic-bezier(.16,1,.3,1),background var(--theme-dur);
+  flex:1;min-height:0;
+  background:var(--ink);
+  overflow-y:hidden;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .4s cubic-bezier(.16,1,.3,1),visibility .4s,background var(--theme-dur);
 }
-.uc-drawer.open{max-height:360px}
+.uc-drawer.open{
+  opacity:1;visibility:visible;pointer-events:all;
+  overflow-y:auto;
+}
 .uc-inner{
   padding:clamp(20px,3.5vh,32px) clamp(20px,4vw,56px);
   display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(20px,3vw,40px);
@@ -674,6 +677,211 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
   filter:blur(18px);
   opacity:1;
 }
+
+/* ── MAGAZINE OVERLAY ─────────────────────────────────────── */
+.mag-overlay{
+  position:absolute;inset:0;z-index:20;
+  background:var(--ink);
+  overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:none;
+  clip-path:inset(0 0 100% 0);
+  transition:clip-path .82s cubic-bezier(.16,1,.3,1),background var(--theme-dur);
+  pointer-events:none;
+}
+.mag-overlay::-webkit-scrollbar{display:none}
+.mag-overlay.open{clip-path:inset(0 0 0% 0);pointer-events:all}
+
+.mag-topbar{
+  position:sticky;top:0;z-index:5;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:clamp(11px,1.8vh,17px) clamp(20px,4vw,56px);
+  background:var(--ink);border-bottom:1px solid var(--line);
+  transition:background var(--theme-dur),border-color var(--theme-dur);
+}
+.mag-topbar-label{
+  font-family:var(--mono);font-size:clamp(9px,.83vw,11px);
+  letter-spacing:.4em;text-transform:uppercase;color:var(--text-3);
+  transition:color var(--theme-dur);
+}
+.mag-back{
+  background:none;border:none;cursor:none;pointer-events:all;
+  font-family:var(--mono);font-size:clamp(9px,.88vw,11px);
+  letter-spacing:.28em;text-transform:uppercase;
+  color:var(--text-2);padding:0;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:color .2s;
+}
+.mag-back:hover{color:var(--hi)}
+
+.mag-hero{
+  display:grid;grid-template-columns:clamp(40px,5vw,72px) 1fr;
+  border-bottom:1px solid var(--line);
+  transition:border-color var(--theme-dur);
+}
+.mag-folio-col{
+  display:flex;align-items:center;justify-content:center;
+  padding:clamp(24px,4vh,40px) 0;
+  border-right:1px solid var(--line);
+  transition:border-color var(--theme-dur);
+}
+.mag-folio-num{
+  font-family:var(--mono);font-size:clamp(9px,.82vw,11px);
+  letter-spacing:.5em;text-transform:uppercase;
+  color:var(--text-3);writing-mode:vertical-rl;
+  transform:rotate(180deg);user-select:none;
+  transition:color var(--theme-dur);
+}
+.mag-hero-inner{
+  padding:clamp(40px,6.5vh,72px) clamp(20px,4vw,56px) clamp(36px,5.5vh,60px);
+}
+.mag-status-badge{
+  font-family:var(--mono);font-size:clamp(9px,.83vw,11px);
+  letter-spacing:.36em;text-transform:uppercase;color:var(--iris);
+  display:inline-flex;align-items:center;gap:9px;
+  margin-bottom:clamp(18px,3vh,28px);
+  transition:color var(--theme-dur);
+}
+.mag-status-badge::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--iris);flex-shrink:0;
+  animation:pulse-iris 2s ease-in-out infinite;
+}
+.mag-headline{
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(48px,9.5vw,140px);
+  line-height:.88;letter-spacing:-.04em;
+  color:var(--hi);transition:color var(--theme-dur);
+}
+.mag-headline em{font-style:normal;color:var(--moss)}
+.mag-img-wrap{
+  align-self:end;position:relative;overflow:hidden;
+  border:1px solid var(--line);aspect-ratio:16/10;
+  transition:border-color var(--theme-dur);
+}
+.mag-img-wrap::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(19,22,25,.7) 0%,transparent 55%);
+  pointer-events:none;z-index:1;
+}
+.mag-img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:contrast(1.04) brightness(.88);
+  transition:transform .7s cubic-bezier(.16,1,.3,1),filter .4s;
+}
+.mag-img-wrap:hover .mag-img{transform:scale(1.04);filter:contrast(1.06) brightness(.95)}
+.mag-img-caption{
+  position:absolute;bottom:0;left:0;right:0;z-index:2;
+  padding:8px 12px;
+  font-family:var(--mono);font-size:clamp(8px,.75vw,10px);
+  letter-spacing:.24em;text-transform:uppercase;
+  color:var(--bone);opacity:.55;
+}
+
+.mag-content{
+  display:grid;grid-template-columns:1fr 1fr;
+  transition:border-color var(--theme-dur);
+}
+.mag-desc-col{
+  padding:clamp(36px,5.5vh,60px) clamp(20px,4vw,56px);
+  border-right:1px solid var(--line);
+  transition:border-color var(--theme-dur);
+}
+.mag-status-col{
+  padding:clamp(36px,5.5vh,60px) clamp(20px,4vw,56px);
+}
+.mag-sec-label{
+  font-family:var(--mono);font-size:clamp(9px,.83vw,11px);
+  letter-spacing:.44em;text-transform:uppercase;color:var(--text-3);
+  margin-bottom:clamp(20px,3.5vh,32px);
+  display:flex;align-items:center;gap:12px;
+  transition:color var(--theme-dur);
+}
+.mag-sec-label::before{content:'';width:22px;height:1px;background:currentColor;flex-shrink:0}
+.mag-desc-body{
+  font-family:var(--syne);font-size:clamp(14px,1.35vw,18px);
+  line-height:1.88;color:var(--text-2);
+  transition:color var(--theme-dur);
+}
+.mag-status-group{margin-bottom:clamp(28px,4.5vh,44px)}
+.mag-group-label{
+  font-family:var(--mono);font-size:clamp(9px,.83vw,11px);
+  letter-spacing:.4em;text-transform:uppercase;
+  color:var(--text-3);margin-bottom:clamp(12px,2vh,18px);
+  display:flex;align-items:center;gap:10px;
+  transition:color var(--theme-dur);
+}
+.mag-group-label.complete::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--moss);flex-shrink:0;
+}
+.mag-group-label.building::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--iris);flex-shrink:0;
+  animation:pulse-iris 2s ease-in-out infinite;
+}
+.mag-list{list-style:none;display:flex;flex-direction:column}
+.mag-item{
+  font-family:var(--syne);font-size:clamp(13px,1.18vw,16px);
+  line-height:1.55;color:var(--text-2);
+  padding:clamp(10px,1.6vh,14px) 0;
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:baseline;gap:12px;
+  transition:color var(--theme-dur),border-color var(--theme-dur);
+}
+.mag-item::before{content:'—';color:var(--text-3);font-family:var(--mono);font-size:.9em;flex-shrink:0}
+
+.mag-footer{
+  padding:clamp(20px,3.5vh,32px) clamp(20px,4vw,56px);
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--line);
+  transition:border-color var(--theme-dur);
+}
+.mag-footer-label{
+  font-family:var(--mono);font-size:clamp(8px,.78vw,10px);
+  letter-spacing:.36em;text-transform:uppercase;color:var(--text-3);
+  transition:color var(--theme-dur);
+}
+.mag-tags-row{display:flex;flex-wrap:wrap;gap:6px}
+.mag-tag{
+  font-family:var(--mono);font-size:clamp(8px,.78vw,10px);
+  letter-spacing:.22em;text-transform:uppercase;
+  padding:4px 9px;border:1px solid var(--line);
+  color:var(--text-3);border-radius:1px;
+  transition:color var(--theme-dur),border-color var(--theme-dur);
+}
+@media(max-width:640px){
+  .mag-hero{grid-template-columns:clamp(32px,6vw,44px) 1fr}
+  .mag-hero-inner{padding:clamp(28px,4vh,44px) clamp(16px,4vw,32px) clamp(24px,4vh,40px)}
+  .mag-content{grid-template-columns:1fr}
+  .mag-desc-col{border-right:none;border-bottom:1px solid var(--line)}
+  .mag-footer{flex-direction:column;align-items:flex-start;gap:14px}
+}
+
+/* ── MODAL TAB STRIP ── */
+.tab-strip{
+  position:relative;flex-shrink:0;z-index:10;
+  display:flex;align-items:stretch;justify-content:center;
+  background:var(--ink);border-bottom:1px solid var(--line);
+  transition:background var(--theme-dur),border-color var(--theme-dur);
+}
+.tab-btn{
+  background:none;border:none;cursor:none;pointer-events:all;
+  font-family:var(--mono);font-size:clamp(9px,.83vw,11px);
+  letter-spacing:.36em;text-transform:uppercase;color:var(--text-3);
+  padding:clamp(10px,1.8vh,14px) clamp(20px,3.5vw,40px);
+  border-right:1px solid var(--line);
+  position:relative;overflow:hidden;
+  transition:color .2s,border-color var(--theme-dur);
+}
+.tab-btn::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:1px;background:var(--moss);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .35s cubic-bezier(.16,1,.3,1);
+}
+.tab-btn.active{color:var(--hi)}
+.tab-btn.active::after{transform:scaleX(1)}
+.tab-btn:hover:not(.active){color:var(--text-2)}
 </style>
 </head>
 <body>
@@ -1430,7 +1638,7 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
   
   /* ── project data ── */
   const PROJECTS = {
-    1:{num:'01',label:'Arcetype',url:'https://thatsantosguy.github.io/arcetype/index.html',underConstruction:true,
+    1:{num:'01',label:'Arcetype',titleHtml:'<em>Arc</em>etype',tags:['Fashion Brand','Canvas UX','E-commerce'],url:'https://thatsantosguy.github.io/arcetype/index.html',underConstruction:true,
       description:'A platform for a London fashion label operating at the edge of streetwear and conceptual design. The site features a custom click-and-drag spray paint mechanic inspired by Microsoft Paint alongside interchangeable image backdrops — a reflection of the brand\'s origins in one-of-one spray painted garments.',
       ready:['Interactive drag-to-cart functionality','Product architecture — Shopify integrated','Paint mechanic','General infrastructure'],
       building:['Final aesthetic refinement','Refine customising interface','Campaign editorial pages']
@@ -1439,12 +1647,12 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
       tagline:'An early 2000s internet inspired website with a hidden outtakes album download easter egg.'},
     3:{num:'03',label:'santos bluː',url:'https://santosblu.com',underConstruction:false,shaderControl:true,
       tagline:'An immersive artist site with a real time sunrise animation.'},
-    4:{num:'04',label:'Earthtown',url:'https://thatsantosguy.github.io/earthtown/index.html',underConstruction:true,
+    4:{num:'04',label:'Earthtown',titleHtml:'<em>earth</em>town',tags:['Social Platform','Chatroom','Arts Collective'],url:'https://thatsantosguy.github.io/earthtown/index.html',underConstruction:true,
       description:'A community portal for an artist collective, designed as a shared space for music, visuals, launches, and exclusive content. Users can create accounts, customise avatars, and upload their own material, which is then reviewed and curated by administrators.',
       ready:['Chat room infrastructure — shared audio players and file uploads','Member profiles and avatar generator','Content upload system and admin framework infrastructure'],
       building:['Final branding and visual treatment','Infrastructure for specific content launches — music video, clothing, etc.','Flexible rollout system for campaign-specific releases']
     },
-    5:{num:'05',label:'Mau from Nowhere',url:'https://studio-212.github.io/mfn/',underConstruction:true,
+    5:{num:'05',label:'Mau from Nowhere',titleHtml:'mau from <em>nowhere</em>',tags:['Artist Site','CMS','Self-managed'],tabs:true,url:'https://studio-212.github.io/mfn/',underConstruction:true,
       description:'An artist site for Mau from Nowhere — a space that holds his music, visuals, and biography in a single atmospheric world. Built with a custom admin panel so Mau can upload and update content himself, without touching code.',
       ready:['Admin panel and content management system','Biography and press section','Portrait and media framework'],
       building:['Final visual treatment and atmospheric design']
@@ -1461,29 +1669,51 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
     if(extLink)extLink.href=p.url;
 
     const ucBanner = p.underConstruction
-      ? `<div style="position:relative;z-index:10;background:var(--ink);border-bottom:1px solid var(--line)">
-           <div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:8px clamp(16px,3vw,32px);pointer-events:none;border-bottom:1px solid var(--line)">
+      ? `<div id="uc-strip" style="position:relative;flex-shrink:0;z-index:11;pointer-events:all">
+           <div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:8px clamp(16px,3vw,32px);background:var(--ink);border-bottom:1px solid var(--line);transition:background var(--theme-dur),border-color var(--theme-dur)">
              <span style="width:5px;height:5px;border-radius:50%;background:var(--iris);display:inline-block;animation:pulse-iris 2s ease-in-out infinite;flex-shrink:0"></span>
              <span style="font-family:var(--mono);font-size:clamp(9px,.83vw,11px);letter-spacing:.36em;text-transform:uppercase;color:var(--iris)">under construction — work in progress</span>
            </div>
-           <button class="uc-toggle" id="uc-toggle" aria-expanded="false">
-             <span>details</span><span class="uc-arrow">↓</span>
+           <button class="uc-toggle" id="uc-toggle" aria-expanded="false" style="background:var(--ink);border-bottom:1px solid var(--line);transition:background var(--theme-dur),border-color var(--theme-dur)">
+             <span>show details</span><span class="uc-arrow">↓</span>
            </button>
-           <div class="uc-drawer" id="uc-drawer">
-             <div class="uc-inner">
-               <div>
-                 <div class="uc-col-label">About</div>
-                 <div class="uc-col-body">${p.description}</div>
+         </div>
+         <div id="uc-mag-zone" style="position:relative;flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden">
+           ${p.tabs?`<div class="tab-strip" id="tab-strip">
+             <button class="tab-btn active" data-tab="site">Site</button>
+             <button class="tab-btn" data-tab="admin">Admin Panel</button>
+           </div>`:''}
+           <div id="uc-iframe-zone" style="position:relative;flex:1;min-height:0;"></div>
+           <div class="mag-overlay" id="mag-overlay">
+             <div class="mag-hero">
+               <div class="mag-folio-col">
+                 <span class="mag-folio-num">${p.num} — in progress</span>
                </div>
-               <div>
-                 <div class="uc-col-label">What's ready</div>
-                 <ul class="uc-col-body">${p.ready.map(i=>`<li>${i}</li>`).join('')}</ul>
-               </div>
-               <div>
-                 <div class="uc-col-label">In progress</div>
-                 <ul class="uc-col-body">${p.building.map(i=>`<li>${i}</li>`).join('')}</ul>
+               <div class="mag-hero-inner">
+                 <div class="mag-status-badge">in progress</div>
+                 <h2 class="mag-headline">${p.titleHtml||p.label}</h2>
                </div>
              </div>
+             <div class="mag-content">
+               <div class="mag-desc-col">
+                 <div class="mag-sec-label">About</div>
+                 <p class="mag-desc-body">${p.description}</p>
+               </div>
+               <div class="mag-status-col">
+                 <div class="mag-status-group">
+                   <div class="mag-group-label complete">Complete</div>
+                   <ul class="mag-list">${p.ready.map(i=>`<li class="mag-item">${i}</li>`).join('')}</ul>
+                 </div>
+                 <div class="mag-status-group">
+                   <div class="mag-group-label building">In Progress</div>
+                   <ul class="mag-list">${p.building.map(i=>`<li class="mag-item">${i}</li>`).join('')}</ul>
+                 </div>
+               </div>
+             </div>
+             ${p.tags?`<div class="mag-footer">
+               <span class="mag-footer-label">Tags</span>
+               <div class="mag-tags-row">${p.tags.map(t=>`<span class="mag-tag">${t}</span>`).join('')}</div>
+             </div>`:''}
            </div>
          </div>`
       : '';
@@ -1492,12 +1722,14 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
     const iframeEl = preloaded
       ? preloaded
       : document.createElement('iframe');
-    iframeEl.style.cssText='width:100%;flex:1;border:none;display:block';
+    iframeEl.style.cssText=p.underConstruction
+      ? 'position:absolute;inset:0;width:100%;height:100%;border:none;display:block'
+      : 'width:100%;flex:1;border:none;display:block';
     iframeEl.allow='autoplay; fullscreen; gyroscope; accelerometer; device-orientation';
     iframeEl.title=p.label;
     if(!preloaded) iframeEl.src=p.url;
 
-    body.innerHTML=`<div style="position:relative;flex:1;display:flex;flex-direction:column">${ucBanner}</div>`;
+    body.innerHTML=`<div style="position:relative;flex:1;min-height:0;display:flex;flex-direction:column">${ucBanner}</div>`;
     const bodyDiv=body.querySelector('div');
 
     if(p.tagline){
@@ -1535,18 +1767,42 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
       });
     }
 
-    bodyDiv.appendChild(iframeEl);
+    const iframeTarget = document.getElementById('uc-iframe-zone') || bodyDiv;
+    iframeTarget.appendChild(iframeEl);
 
-    // wire up toggle if present
+    // wire up magazine overlay if present
     if(p.underConstruction){
       const tog=document.getElementById('uc-toggle');
-      const drawer=document.getElementById('uc-drawer');
+      const mag=document.getElementById('mag-overlay');
       tog.addEventListener('click',e=>{
         e.stopPropagation();
-        const open=drawer.classList.toggle('open');
+        const open=mag.classList.toggle('open');
         tog.classList.toggle('open',open);
         tog.setAttribute('aria-expanded',open);
+        tog.querySelector('span').textContent=open?'hide details':'show details';
+        if(!open) mag.scrollTop=0;
       });
+      tog.addEventListener('mouseenter',()=>document.body.classList.add('chov'));
+      tog.addEventListener('mouseleave',()=>document.body.classList.remove('chov'));
+
+      if(p.tabs){
+        const adminFrame=document.createElement('iframe');
+        adminFrame.src='mfn-admin.html';
+        adminFrame.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:none;display:none';
+        iframeTarget.appendChild(adminFrame);
+        document.querySelectorAll('.tab-btn').forEach(btn=>{
+          btn.addEventListener('click',e=>{
+            e.stopPropagation();
+            document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            const t=btn.dataset.tab;
+            iframeEl.style.display=t==='site'?'block':'none';
+            adminFrame.style.display=t==='admin'?'block':'none';
+          });
+          btn.addEventListener('mouseenter',()=>document.body.classList.add('chov'));
+          btn.addEventListener('mouseleave',()=>document.body.classList.remove('chov'));
+        });
+      }
     }
 
     body.scrollTop=0;
