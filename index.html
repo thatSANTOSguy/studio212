@@ -574,36 +574,64 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
 }
 /* ── SHADER SCRUBBER ── */
 #shader-ctrl{
-  position:absolute;bottom:0;left:0;right:0;z-index:10;
-  display:flex;align-items:center;gap:10px;
-  padding:10px clamp(14px,3vw,28px);
-  background:linear-gradient(to top,var(--ink) 60%,transparent);
+  position:absolute;top:0;left:0;right:0;z-index:10;
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  padding:14px clamp(16px,3vw,32px);
+  background:linear-gradient(to bottom,var(--ink) 40%,transparent);
   pointer-events:all;
 }
+#sc-track-wrap{display:flex;align-items:center;gap:9px;}
+.sc-ep{
+  font-family:var(--mono);font-size:clamp(8px,.66vw,10px);
+  letter-spacing:.24em;text-transform:uppercase;
+  color:var(--text-3);flex-shrink:0;
+  transition:color var(--theme-dur);
+}
 #sc-scrub{
-  flex:1;-webkit-appearance:none;appearance:none;
-  height:2px;background:var(--line);border-radius:1px;outline:none;cursor:none;
+  width:clamp(160px,18vw,240px);flex:none;
+  -webkit-appearance:none;appearance:none;
+  height:2px;background:linear-gradient(to right,var(--bone) var(--fill,0%),var(--line) var(--fill,0%));
+  border-radius:1px;outline:none;cursor:none;
 }
 #sc-scrub::-webkit-slider-thumb{
-  -webkit-appearance:none;width:10px;height:10px;border-radius:50%;
+  -webkit-appearance:none;width:8px;height:8px;border-radius:50%;
   background:var(--bone);cursor:none;
+  box-shadow:0 0 0 2px rgba(237,232,224,.12);
 }
 #sc-scrub::-moz-range-thumb{
-  width:10px;height:10px;border-radius:50%;border:none;
+  width:8px;height:8px;border-radius:50%;border:none;
   background:var(--bone);cursor:none;
 }
-#sc-playpause,#sc-speed{
+#sc-ff,#sc-playpause{
   background:none;border:none;cursor:none;
-  font-family:var(--mono);font-size:clamp(8px,.75vw,10px);
-  letter-spacing:.14em;color:var(--text-2);
-  transition:color .2s;padding:0;flex-shrink:0;
+  display:flex;align-items:center;gap:5px;
+  font-family:var(--mono);font-size:clamp(10px,.9vw,12px);
+  letter-spacing:.1em;color:var(--text-3);
+  transition:color .18s;padding:0;flex-shrink:0;
 }
-#sc-speed{appearance:none;-webkit-appearance:none;}
-#sc-playpause:hover,#sc-speed:hover{color:var(--bone)}
+#sc-ff:hover,#sc-playpause:hover{color:var(--bone)}
+#sc-ff-icon{font-size:clamp(11px,1vw,13px);}
+#sc-pips{display:flex;align-items:flex-end;gap:2px;height:10px;}
+.sc-pip{
+  width:2px;border-radius:1px;
+  background:rgba(255,255,255,.18);
+  transition:background .14s cubic-bezier(.4,0,.2,1), height .14s cubic-bezier(.4,0,.2,1);
+}
+.sc-pip:nth-child(1){height:4px;}
+.sc-pip:nth-child(2){height:6px;}
+.sc-pip:nth-child(3){height:9px;}
+#sc-ff[data-step="1"] .sc-pip:nth-child(1){background:var(--iris);}
+#sc-ff[data-step="2"] .sc-pip:nth-child(1),
+#sc-ff[data-step="2"] .sc-pip:nth-child(2){background:var(--iris);}
+#sc-ff[data-step="3"] .sc-pip{background:var(--bone);}
+#sc-ff[data-step="1"],
+#sc-ff[data-step="2"],
+#sc-ff[data-step="3"]{color:var(--text-2);}
+#sc-playpause{font-size:clamp(11px,1vw,13px);}
 #sc-time{
-  font-family:var(--mono);font-size:clamp(7px,.65vw,9px);
-  letter-spacing:.14em;color:var(--text-3);flex-shrink:0;
-  transition:color var(--theme-dur);min-width:3ch;text-align:right;
+  font-family:var(--mono);font-size:clamp(9px,.76vw,11px);
+  letter-spacing:.16em;color:var(--text-3);flex-shrink:0;
+  transition:color var(--theme-dur);min-width:3.2ch;text-align:right;
 }
 
 /* the light — barely there, no visible shape */
@@ -1446,16 +1474,17 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
       const ctrl=document.createElement('div');
       ctrl.id='shader-ctrl';
       ctrl.innerHTML=`
-        <button id="sc-playpause" aria-label="Play/pause">▶</button>
-        <input id="sc-scrub" type="range" min="0" max="540" step="0.5" value="0" aria-label="Scrub time">
+        <button id="sc-ff" aria-label="Fast forward" data-step="0">
+          <span id="sc-ff-icon">▶▶</span>
+          <span id="sc-pips"><span class="sc-pip"></span><span class="sc-pip"></span><span class="sc-pip"></span></span>
+        </button>
+        <div id="sc-track-wrap">
+          <span class="sc-ep">dawn</span>
+          <input id="sc-scrub" type="range" min="0" max="540" step="0.5" value="0" aria-label="Scrub time of day">
+          <span class="sc-ep">dusk</span>
+        </div>
         <span id="sc-time">0:00</span>
-        <select id="sc-speed" aria-label="Speed">
-          <option value="0.25">0.25×</option>
-          <option value="0.5">0.5×</option>
-          <option value="1" selected>1×</option>
-          <option value="2">2×</option>
-          <option value="5">5×</option>
-        </select>`;
+        <button id="sc-playpause" aria-label="Pause">⏸</button>`;
       bodyDiv.appendChild(ctrl);
       initShaderClock(iframeEl);
     }
@@ -1481,14 +1510,19 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
   /* ── shader clock ── */
   let _shaderRaf=null;
   function initShaderClock(iframe){
-    let time=0, playing=false, speed=1, lastTs=null;
+    const SPEEDS=[1,6,15,45];
+    let time=0, playing=true, speedStep=0, speed=1, lastTs=null;
     const scrub=document.getElementById('sc-scrub');
-    const btn=document.getElementById('sc-playpause');
+    const pauseBtn=document.getElementById('sc-playpause');
+    const ffBtn=document.getElementById('sc-ff');
     const timeEl=document.getElementById('sc-time');
-    const speedEl=document.getElementById('sc-speed');
 
     function post(t){ iframe.contentWindow?.postMessage({type:'scrub',time:t},'https://santosblu.com'); }
     function fmt(t){ const m=Math.floor(t/60),s=Math.floor(t%60); return `${m}:${s.toString().padStart(2,'0')}`; }
+    function setFill(t){ const pct=(t/parseFloat(scrub.max)*100).toFixed(2); scrub.style.setProperty('--fill',pct+'%'); }
+
+    function startPlay(){ playing=true; pauseBtn.textContent='⏸'; lastTs=null; _shaderRaf=requestAnimationFrame(tick); }
+    function stopPlay(){ playing=false; pauseBtn.textContent='▶'; cancelAnimationFrame(_shaderRaf); _shaderRaf=null; }
 
     function tick(ts){
       if(playing){
@@ -1496,25 +1530,34 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
         lastTs=ts;
         scrub.value=time;
         timeEl.textContent=fmt(time);
+        setFill(time);
         post(time);
         _shaderRaf=requestAnimationFrame(tick);
       }
     }
 
-    btn.addEventListener('click',()=>{
-      playing=!playing;
-      btn.textContent=playing?'⏸':'▶';
-      if(playing){ lastTs=null; _shaderRaf=requestAnimationFrame(tick); }
-      else{ cancelAnimationFrame(_shaderRaf); _shaderRaf=null; }
+    ffBtn.addEventListener('click',()=>{
+      speedStep=(speedStep+1)%SPEEDS.length;
+      speed=SPEEDS[speedStep];
+      ffBtn.dataset.step=speedStep;
+      if(!playing) startPlay();
+      else{ lastTs=null; }
+    });
+
+    pauseBtn.addEventListener('click',()=>{
+      if(playing) stopPlay();
+      else startPlay();
     });
 
     scrub.addEventListener('input',()=>{
       time=parseFloat(scrub.value);
       timeEl.textContent=fmt(time);
+      setFill(time);
       post(time);
     });
 
-    speedEl.addEventListener('change',()=>{ speed=parseFloat(speedEl.value); });
+    /* auto-start */
+    startPlay();
   }
 
   /* ── close ── */
