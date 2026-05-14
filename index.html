@@ -85,7 +85,7 @@ body.cacc #c-ring{border-color:var(--moss);width:44px;height:44px}
   opacity:0;visibility:hidden;
   transition:opacity .5s cubic-bezier(.16,1,.3,1),visibility .5s,background var(--theme-dur);
 }
-#proj-modal.open{opacity:1;visibility:visible}
+#proj-modal.open{opacity:1;visibility:visible;cursor:auto}
 #proj-modal.open .modal-banner{transform:translateY(0);opacity:1}
 #proj-modal.open .modal-body{transform:translateY(0);opacity:1}
 
@@ -574,18 +574,48 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
 }
 /* ── SHADER SCRUBBER ── */
 #shader-ctrl{
-  position:absolute;top:0;left:0;right:0;z-index:10;
-  display:flex;align-items:center;justify-content:center;gap:14px;
-  padding:14px clamp(16px,3vw,32px);
-  background:linear-gradient(to bottom,var(--ink) 40%,transparent);
+  flex-shrink:0;display:flex;flex-direction:column;align-items:center;
+  gap:8px;overflow:hidden;
+  max-height:0;padding:0 clamp(16px,3vw,32px);
+  background:var(--ink);border-bottom:1px solid var(--line);
+  transition:max-height .4s cubic-bezier(.16,1,.3,1),padding .4s cubic-bezier(.16,1,.3,1),background var(--theme-dur),border-color var(--theme-dur);
   pointer-events:all;
+}
+#shader-ctrl.open{
+  max-height:120px;padding:12px clamp(16px,3vw,32px);
+}
+#sc-desc-bar{
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:16px;
+  padding:10px clamp(16px,3vw,32px);
+  background:var(--ink);border-bottom:1px solid var(--line);
+  transition:background var(--theme-dur),border-color var(--theme-dur);
+}
+#sc-desc{
+  margin:0;font-family:var(--syne);font-size:clamp(10px,.88vw,12px);
+  letter-spacing:.01em;color:var(--text-2);
+  transition:color var(--theme-dur);
+}
+#sc-ctrl-btn{
+  background:none;border:1px solid var(--line);cursor:pointer;
+  font-family:var(--mono);font-size:clamp(7px,.6vw,9px);
+  letter-spacing:.28em;text-transform:uppercase;color:var(--text-3);
+  padding:4px 10px;flex-shrink:0;
+  transition:color .18s,border-color .18s,background var(--theme-dur);
+}
+#sc-ctrl-btn:hover{color:var(--bone);border-color:var(--text-2);}
+#sc-controls-row{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+}
+#sc-label{
+  font-family:var(--mono);font-size:clamp(8px,.72vw,10px);
+  letter-spacing:.3em;text-transform:uppercase;white-space:nowrap;
+  color:var(--text-3);flex-shrink:0;transition:color var(--theme-dur);
 }
 #sc-track-wrap{display:flex;align-items:center;gap:9px;}
 .sc-ep{
   font-family:var(--mono);font-size:clamp(8px,.66vw,10px);
   letter-spacing:.24em;text-transform:uppercase;
-  color:var(--text-3);flex-shrink:0;
-  transition:color var(--theme-dur);
+  color:var(--text-3);flex-shrink:0;transition:color var(--theme-dur);
 }
 #sc-scrub{
   width:clamp(160px,18vw,240px);flex:none;
@@ -596,26 +626,25 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
 #sc-scrub::-webkit-slider-thumb{
   -webkit-appearance:none;width:8px;height:8px;border-radius:50%;
   background:var(--bone);cursor:none;
-  box-shadow:0 0 0 2px rgba(237,232,224,.12);
 }
 #sc-scrub::-moz-range-thumb{
   width:8px;height:8px;border-radius:50%;border:none;
   background:var(--bone);cursor:none;
 }
 #sc-ff,#sc-playpause{
-  background:none;border:none;cursor:none;
+  background:none;border:none;cursor:pointer;
   display:flex;align-items:center;gap:5px;
   font-family:var(--mono);font-size:clamp(10px,.9vw,12px);
   letter-spacing:.1em;color:var(--text-3);
   transition:color .18s;padding:0;flex-shrink:0;
 }
-#sc-ff:hover,#sc-playpause:hover{color:var(--bone)}
+#sc-ff:hover,#sc-playpause:hover{color:var(--bone);}
 #sc-ff-icon{font-size:clamp(11px,1vw,13px);}
 #sc-pips{display:flex;align-items:flex-end;gap:2px;height:10px;}
 .sc-pip{
   width:2px;border-radius:1px;
-  background:rgba(255,255,255,.18);
-  transition:background .14s cubic-bezier(.4,0,.2,1), height .14s cubic-bezier(.4,0,.2,1);
+  background:var(--line);
+  transition:background .14s cubic-bezier(.4,0,.2,1),height .14s cubic-bezier(.4,0,.2,1),border-color var(--theme-dur);
 }
 .sc-pip:nth-child(1){height:4px;}
 .sc-pip:nth-child(2){height:6px;}
@@ -631,7 +660,7 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
 #sc-time{
   font-family:var(--mono);font-size:clamp(9px,.76vw,11px);
   letter-spacing:.16em;color:var(--text-3);flex-shrink:0;
-  transition:color var(--theme-dur);min-width:3.2ch;text-align:right;
+  min-width:3.2ch;text-align:right;transition:color var(--theme-dur);
 }
 
 /* the light — barely there, no visible shape */
@@ -1468,26 +1497,40 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
 
     body.innerHTML=`<div style="position:relative;flex:1;display:flex;flex-direction:column">${ucBanner}</div>`;
     const bodyDiv=body.querySelector('div');
-    bodyDiv.appendChild(iframeEl);
 
     if(p.shaderControl){
+      const descBar=document.createElement('div');
+      descBar.id='sc-desc-bar';
+      descBar.innerHTML='<p id="sc-desc">An immersive artist site with a real time sunrise animation.</p><button id="sc-ctrl-btn">control time</button>';
+      bodyDiv.appendChild(descBar);
+
       const ctrl=document.createElement('div');
       ctrl.id='shader-ctrl';
       ctrl.innerHTML=`
-        <button id="sc-ff" aria-label="Fast forward" data-step="0">
-          <span id="sc-ff-icon">▶▶</span>
-          <span id="sc-pips"><span class="sc-pip"></span><span class="sc-pip"></span><span class="sc-pip"></span></span>
-        </button>
-        <div id="sc-track-wrap">
-          <span class="sc-ep">dawn</span>
-          <input id="sc-scrub" type="range" min="0" max="540" step="0.5" value="0" aria-label="Scrub time of day">
-          <span class="sc-ep">dusk</span>
-        </div>
-        <span id="sc-time">0:00</span>
-        <button id="sc-playpause" aria-label="Pause">⏸</button>`;
+        <span id="sc-label">time controls:</span>
+        <div id="sc-controls-row">
+          <button id="sc-ff" aria-label="Fast forward" data-step="0">
+            <span id="sc-ff-icon">▶▶</span>
+            <span id="sc-pips"><span class="sc-pip"></span><span class="sc-pip"></span><span class="sc-pip"></span></span>
+          </button>
+          <div id="sc-track-wrap">
+            <span class="sc-ep">dawn</span>
+            <input id="sc-scrub" type="range" min="0" max="540" step="0.5" value="0" aria-label="Scrub time of day">
+            <span class="sc-ep">dusk</span>
+          </div>
+          <span id="sc-time">0:00</span>
+          <button id="sc-playpause" aria-label="Pause">⏸</button>
+        </div>`;
       bodyDiv.appendChild(ctrl);
       initShaderClock(iframeEl);
+
+      document.getElementById('sc-ctrl-btn').addEventListener('click',()=>{
+        const open=ctrl.classList.toggle('open');
+        document.getElementById('sc-ctrl-btn').textContent=open?'close':'control time';
+      });
     }
+
+    bodyDiv.appendChild(iframeEl);
 
     // wire up toggle if present
     if(p.underConstruction){
@@ -1504,14 +1547,20 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
     body.scrollTop=0;
     document.body.style.overflow='hidden';
     modal.classList.add('open');
+    curEl.style.opacity='0';
     document.title=`${p.label} — studio212`;
   }
 
   /* ── shader clock ── */
+  // effectiveTime = shaderClock + offset (additive model)
+  // Default play: offset speed 0  → scrubber still, net animation = real time
+  // Paused:       offset speed -1 → cancels shader clock, animation frozen, scrubber drifts left
+  // FF steps:     offset speed >0 → scrubber moves right, net animation faster than real time
   let _shaderRaf=null;
   function initShaderClock(iframe){
-    const SPEEDS=[1,6,15,45];
-    let time=0, playing=true, speedStep=0, speed=1, lastTs=null;
+    const FF_SPEEDS=[3, 18, 75]; // offset/s for FF steps 1-3
+    const PAUSE_DRIFT=-1;       // exactly cancels shaderClock → frozen
+    let time=0, ffStep=0, paused=false, lastTs=null;
     const scrub=document.getElementById('sc-scrub');
     const pauseBtn=document.getElementById('sc-playpause');
     const ffBtn=document.getElementById('sc-ff');
@@ -1520,33 +1569,34 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
     function post(t){ iframe.contentWindow?.postMessage({type:'scrub',time:t},'https://santosblu.com'); }
     function fmt(t){ const m=Math.floor(t/60),s=Math.floor(t%60); return `${m}:${s.toString().padStart(2,'0')}`; }
     function setFill(t){ const pct=(t/parseFloat(scrub.max)*100).toFixed(2); scrub.style.setProperty('--fill',pct+'%'); }
-
-    function startPlay(){ playing=true; pauseBtn.textContent='⏸'; lastTs=null; _shaderRaf=requestAnimationFrame(tick); }
-    function stopPlay(){ playing=false; pauseBtn.textContent='▶'; cancelAnimationFrame(_shaderRaf); _shaderRaf=null; }
+    function getSpeed(){ return paused ? PAUSE_DRIFT : (ffStep>0 ? FF_SPEEDS[ffStep-1] : 0); }
 
     function tick(ts){
-      if(playing){
-        if(lastTs!=null) time=Math.min(parseFloat(scrub.max), time+(ts-lastTs)/1000*speed);
-        lastTs=ts;
+      const spd=getSpeed();
+      if(lastTs!=null && spd!==0){
+        time=Math.max(0, Math.min(parseFloat(scrub.max), time+(ts-lastTs)/1000*spd));
         scrub.value=time;
         timeEl.textContent=fmt(time);
         setFill(time);
         post(time);
-        _shaderRaf=requestAnimationFrame(tick);
       }
+      lastTs=ts;
+      _shaderRaf=requestAnimationFrame(tick);
     }
 
     ffBtn.addEventListener('click',()=>{
-      speedStep=(speedStep+1)%SPEEDS.length;
-      speed=SPEEDS[speedStep];
-      ffBtn.dataset.step=speedStep;
-      if(!playing) startPlay();
-      else{ lastTs=null; }
+      ffStep=(ffStep+1)%(FF_SPEEDS.length+1);
+      if(paused){ paused=false; pauseBtn.textContent='⏸'; }
+      ffBtn.dataset.step=ffStep;
+      lastTs=null;
     });
 
     pauseBtn.addEventListener('click',()=>{
-      if(playing) stopPlay();
-      else startPlay();
+      paused=!paused;
+      if(paused) ffStep=0;
+      ffBtn.dataset.step=0;
+      pauseBtn.textContent=paused?'▶':'⏸';
+      lastTs=null;
     });
 
     scrub.addEventListener('input',()=>{
@@ -1556,8 +1606,8 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
       post(time);
     });
 
-    /* auto-start */
-    startPlay();
+    post(time);
+    _shaderRaf=requestAnimationFrame(tick);
   }
 
   /* ── close ── */
@@ -1575,6 +1625,7 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
     }
     while(body.firstChild)body.removeChild(body.firstChild); // safe clear
     document.body.style.overflow='';
+    curEl.style.opacity='1';
     document.title='studio212';
   }
 
