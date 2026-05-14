@@ -1435,8 +1435,10 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
       ready:['Interactive drag-to-cart functionality','Product architecture — Shopify integrated','Paint mechanic','General infrastructure'],
       building:['Final aesthetic refinement','Refine customising interface','Campaign editorial pages']
     },
-    2:{num:'02',label:'Osquello',url:'https://osquello.com',underConstruction:false},
-    3:{num:'03',label:'santos bluː',url:'https://santosblu.com',underConstruction:false,shaderControl:true},
+    2:{num:'02',label:'Osquello',url:'https://osquello.com',underConstruction:false,
+      tagline:'An early 2000s internet inspired website with a hidden outtakes album download easter egg.'},
+    3:{num:'03',label:'santos bluː',url:'https://santosblu.com',underConstruction:false,shaderControl:true,
+      tagline:'An immersive artist site with a real time sunrise animation.'},
     4:{num:'04',label:'Earthtown',url:'https://thatsantosguy.github.io/earthtown/index.html',underConstruction:true,
       description:'A community portal for an artist collective, designed as a shared space for music, visuals, launches, and exclusive content. Users can create accounts, customise avatars, and upload their own material, which is then reviewed and curated by administrators.',
       ready:['Chat room infrastructure — shared audio players and file uploads','Member profiles and avatar generator','Content upload system and admin framework infrastructure'],
@@ -1498,11 +1500,14 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
     body.innerHTML=`<div style="position:relative;flex:1;display:flex;flex-direction:column">${ucBanner}</div>`;
     const bodyDiv=body.querySelector('div');
 
-    if(p.shaderControl){
+    if(p.tagline){
       const descBar=document.createElement('div');
       descBar.id='sc-desc-bar';
-      descBar.innerHTML='<p id="sc-desc">An immersive artist site with a real time sunrise animation.</p><button id="sc-ctrl-btn">control time</button>';
+      descBar.innerHTML=`<p id="sc-desc">${p.tagline}</p>${p.shaderControl?'<button id="sc-ctrl-btn">control time</button>':''}`;
       bodyDiv.appendChild(descBar);
+    }
+
+    if(p.shaderControl){
 
       const ctrl=document.createElement('div');
       ctrl.id='shader-ctrl';
