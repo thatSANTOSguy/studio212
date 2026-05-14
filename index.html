@@ -1747,7 +1747,7 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
         <span id="sc-label">time controls:</span>
         <div id="sc-controls-row">
           <button id="sc-ff" aria-label="Fast forward" data-step="0">
-            <span id="sc-ff-icon">▶▶</span>
+            <svg id="sc-ff-icon" viewBox="0 0 18 14" width="14" height="12" fill="currentColor" aria-hidden="true" style="display:block"><polygon points="0,0 8,7 0,14"/><polygon points="9,0 18,7 9,14"/></svg>
             <span id="sc-pips"><span class="sc-pip"></span><span class="sc-pip"></span><span class="sc-pip"></span></span>
           </button>
           <div id="sc-track-wrap">
@@ -1756,7 +1756,7 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
             <span class="sc-ep">dusk</span>
           </div>
           <span id="sc-time">0:00</span>
-          <button id="sc-playpause" aria-label="Pause">⏸</button>
+          <button id="sc-playpause" aria-label="Pause">${PAUSE_SVG}</button>
         </div>`;
       bodyDiv.appendChild(ctrl);
       initShaderClock(iframeEl);
@@ -1818,6 +1818,9 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
   // Paused:       offset speed -1 → cancels shader clock, animation frozen, scrubber drifts left
   // FF steps:     offset speed >0 → scrubber moves right, net animation faster than real time
   let _shaderRaf=null;
+  const PAUSE_SVG='<svg viewBox="0 0 10 14" width="10" height="14" fill="currentColor" aria-hidden="true" style="display:block"><rect x="0" y="0" width="3.5" height="14" rx="0.5"/><rect x="6.5" y="0" width="3.5" height="14" rx="0.5"/></svg>';
+  const PLAY_SVG='<svg viewBox="0 0 11 14" width="11" height="14" fill="currentColor" aria-hidden="true" style="display:block"><polygon points="0,0 11,7 0,14"/></svg>';
+
   function initShaderClock(iframe){
     const FF_SPEEDS=[3, 18, 75]; // offset/s for FF steps 1-3
     const PAUSE_DRIFT=-1;       // exactly cancels shaderClock → frozen
@@ -1847,7 +1850,7 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
 
     ffBtn.addEventListener('click',()=>{
       ffStep=(ffStep+1)%(FF_SPEEDS.length+1);
-      if(paused){ paused=false; pauseBtn.textContent='⏸'; }
+      if(paused){ paused=false; pauseBtn.innerHTML=PAUSE_SVG; }
       ffBtn.dataset.step=ffStep;
       lastTs=null;
     });
@@ -1856,7 +1859,7 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
       paused=!paused;
       if(paused) ffStep=0;
       ffBtn.dataset.step=0;
-      pauseBtn.textContent=paused?'▶':'⏸';
+      pauseBtn.innerHTML=paused?PLAY_SVG:PAUSE_SVG;
       lastTs=null;
     });
 
