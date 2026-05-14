@@ -580,12 +580,13 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
   flex-shrink:0;display:flex;flex-direction:column;align-items:center;
   gap:8px;overflow:hidden;
   max-height:0;padding:0 clamp(16px,3vw,32px);
-  background:var(--ink);border-bottom:1px solid var(--line);
-  transition:max-height .4s cubic-bezier(.16,1,.3,1),padding .4s cubic-bezier(.16,1,.3,1),background var(--theme-dur),border-color var(--theme-dur);
+  background:var(--ink);border-bottom:1px solid transparent;
+  transition:max-height .4s cubic-bezier(.16,1,.3,1),padding .4s cubic-bezier(.16,1,.3,1),background var(--theme-dur),border-color .4s cubic-bezier(.16,1,.3,1);
   pointer-events:all;
 }
 #shader-ctrl.open{
   max-height:120px;padding:12px clamp(16px,3vw,32px);
+  border-bottom-color:var(--line);
 }
 #sc-desc-bar{
   flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:16px;
@@ -1756,7 +1757,7 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
             <input id="sc-scrub" type="range" min="0" max="540" step="0.5" value="0" aria-label="Scrub time of day">
             <span class="sc-ep">dusk</span>
           </div>
-          <span id="sc-time">0:00</span>
+          <span id="sc-time">+0:00</span>
           <button id="sc-playpause" aria-label="Pause">${PAUSE_SVG}</button>
         </div>`;
       bodyDiv.appendChild(ctrl);
@@ -1832,7 +1833,7 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
     const timeEl=document.getElementById('sc-time');
 
     function post(t){ iframe.contentWindow?.postMessage({type:'scrub',time:t},'https://santosblu.com'); }
-    function fmt(t){ const m=Math.floor(t/60),s=Math.floor(t%60); return `${m}:${s.toString().padStart(2,'0')}`; }
+    function fmt(t){ const m=Math.floor(t/60),s=Math.floor(t%60); return `+${m}:${s.toString().padStart(2,'0')}`; }
     function setFill(t){ const pct=(t/parseFloat(scrub.max)*100).toFixed(2); scrub.style.setProperty('--fill',pct+'%'); }
     function getSpeed(){ return paused ? PAUSE_DRIFT : (ffStep>0 ? FF_SPEEDS[ffStep-1] : 0); }
 
