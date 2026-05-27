@@ -505,8 +505,12 @@ canvas.row-shader.show{opacity:1;visibility:visible}
 #contact{padding:var(--py) var(--px);background:var(--ink);transition:background var(--theme-dur)}
 .ct-label{font-family:var(--mono);font-size:clamp(9px,.88vw,11px);letter-spacing:.5em;text-transform:uppercase;color:var(--text-3);margin-bottom:clamp(36px,6vh,60px);display:flex;align-items:center;gap:12px}
 .ct-label::before{content:'';width:22px;height:1px;background:currentColor}
-.ct-h{font-family:var(--display);font-size:clamp(52px,10.5vw,152px);font-weight:800;font-style:normal;line-height:.88;letter-spacing:-.03em;color:var(--hi)}
+.ct-h{font-family:var(--display);font-size:clamp(52px,8vw,110px);font-weight:800;font-style:normal;line-height:.88;letter-spacing:-.03em;color:var(--hi)}
 .ct-h em{font-style:normal;font-weight:800;color:var(--violet);display:block;transition:color var(--theme-dur)}
+.ct-h .ct-gold{color:var(--violet);font-style:normal;display:inline;transition:color var(--theme-dur)}
+.ct-h .split-reveal .inner{white-space:nowrap}
+.ct-h .your-short{display:none}
+@media(max-width:1024px){.ct-h .your-full{display:none}.ct-h .your-short{display:inline}}
 .ct-note{font-family:var(--syne);font-size:clamp(13px,1.13vw,15px);letter-spacing:.02em;color:var(--text-2);line-height:1.9;max-width:44ch;margin-top:clamp(24px,4vh,36px);transition:color var(--theme-dur)}
 .ct-note strong{color:var(--hi);font-weight:400}
 .brief-link{
@@ -605,8 +609,29 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
   letter-spacing:.28em;text-transform:uppercase;color:var(--text-3);
   padding:4px 10px;flex-shrink:0;
   transition:color .18s,border-color .18s,background var(--theme-dur);
+  animation:sc-breathe-btn 3.8s ease-in-out infinite;
 }
-#sc-ctrl-btn:hover{color:var(--bone);border-color:var(--text-2);}
+#sc-ctrl-btn:hover{color:var(--bone);border-color:var(--text-2);animation-play-state:paused;box-shadow:none;text-shadow:none;}
+#sc-ctrl-btn.open{animation:none;}
+@keyframes sc-breathe-btn{
+  0%,100%{box-shadow:none;text-shadow:none;color:var(--text-3);}
+  50%{
+    box-shadow:
+      0 0 0 1px rgba(168,228,108,1),
+      inset 0 0 6px rgba(107,140,82,.22),
+      0 0 4px rgba(168,228,108,.85),
+      0 0 11px rgba(107,140,82,.32);
+    text-shadow:0 0 4px rgba(168,228,108,1),0 0 9px rgba(107,140,82,.42);
+    color:rgba(168,228,108,1);
+  }
+}
+@keyframes sc-breathe{
+  0%,100%{text-shadow:none;color:var(--text-3);}
+  50%{
+    text-shadow:0 0 4px rgba(168,228,108,1),0 0 9px rgba(107,140,82,.42);
+    color:rgba(168,228,108,1);
+  }
+}
 #sc-ctrl-btn .sc-btn-a,
 #sc-ctrl-btn .sc-btn-b{transition:opacity .3s;}
 #sc-ctrl-btn .sc-btn-b{
@@ -622,6 +647,7 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
   font-family:var(--mono);font-size:clamp(8px,.72vw,10px);
   letter-spacing:.3em;text-transform:uppercase;white-space:nowrap;
   color:var(--text-3);flex-shrink:0;transition:color var(--theme-dur);
+  animation:sc-breathe 3.8s ease-in-out infinite;
 }
 #sc-track-wrap{display:flex;align-items:center;gap:9px;}
 .sc-ep{
@@ -972,16 +998,13 @@ END EASTER EGGS -->
   <div class="h-orb h-orb-2"></div>
   <div class="h-content">
     <p class="h-eye">Designer · Artist</p>
-    <h1 class="h-h1" id="h1" aria-label="building worlds from the inside out.">
-      <span class="word"><span class="char plain">b</span><span class="char plain">u</span><span class="char plain">i</span><span class="char plain">l</span><span class="char plain">d</span><span class="char plain">i</span><span class="char plain">n</span><span class="char plain">g</span></span>
-      <span class="word"><span class="char accent">w</span><span class="char accent">o</span><span class="char accent">r</span><span class="char accent">l</span><span class="char accent">d</span><span class="char accent">s</span></span>
-      <span class="word"><span class="char plain">f</span><span class="char plain">r</span><span class="char plain">o</span><span class="char plain">m</span></span>
+    <h1 class="h-h1" id="h1" aria-label="alchemising the intangible.">
+      <span class="word"><span class="char plain">a</span><span class="char plain">l</span><span class="char plain">c</span><span class="char plain">h</span><span class="char plain">e</span><span class="char plain">m</span><span class="char plain">i</span><span class="char plain">s</span><span class="char plain">i</span><span class="char plain">n</span><span class="char plain">g</span></span>
       <span class="word"><span class="char plain">t</span><span class="char plain">h</span><span class="char plain">e</span></span>
-      <span class="word"><span class="char plain">i</span><span class="char plain">n</span><span class="char plain">s</span><span class="char plain">i</span><span class="char plain">d</span><span class="char plain">e</span></span>
-      <span class="word"><span class="char plain">o</span><span class="char plain">u</span><span class="char plain">t</span><span class="char accent" style="color:var(--violet)">.</span></span>
+      <span class="word"><span class="char accent">i</span><span class="char accent">n</span><span class="char accent">t</span><span class="char accent">a</span><span class="char accent">n</span><span class="char accent">g</span><span class="char accent">i</span><span class="char accent">b</span><span class="char accent">l</span><span class="char accent">e</span><span class="char plain" style="color:var(--violet)">.</span></span>
     </h1>
     <div class="h-foot" id="h-foot">
-      <p class="h-desc">studio212 builds worlds for artists, venues, and creative businesses that value aesthetic communication.</p>
+      <p class="h-desc">The senses are already dialled in to the feeling you're communicating. We distil it and paint the landscape for your narrative.</p>
       <a href="https://studio212.xyz/sitebrief" target="_blank" rel="noopener" class="brief-link">
         <span>submit a brief</span>
         <span class="arrow">→</span>
@@ -1132,8 +1155,8 @@ END EASTER EGG -->
 <section id="contact">
   <p class="ct-label" data-reveal="drift-l">Contact</p>
   <h2 class="ct-h" data-reveal="split">
-    <span class="split-reveal"><span class="inner">Get in</span></span>
-    <span class="split-reveal"><span class="inner"><em>touch.</em></span></span>
+    <span class="split-reveal"><span class="inner">What's</span></span>
+    <span class="split-reveal"><span class="inner"><span class="ct-gold your-full">your</span><span class="ct-gold your-short">ur</span> idea<span class="ct-gold">?</span></span></span>
   </h2>
   <p class="ct-note" data-reveal="rise" data-d="1">A small number of projects at a time — enough to give each one the attention it deserves. If something here resonates, reach out.</p>
   <a href="https://studio212.xyz/sitebrief" target="_blank" rel="noopener" class="brief-link" data-reveal="rise" data-d="2">
