@@ -119,13 +119,6 @@ body.cacc #c-ring{border-color:var(--moss);width:44px;height:44px}
   padding:0;
 }
 .modal-close:hover{color:var(--hi)}
-.modal-ext{
-  font-family:var(--mono);font-size:clamp(11px,1vw,14px);
-  letter-spacing:.14em;color:var(--text-2);
-  text-decoration:none;cursor:none;pointer-events:all;
-  transition:color .2s;
-}
-.modal-ext:hover{color:var(--hi)}
 
 .modal-body{
   flex:1;overflow:hidden;
@@ -356,22 +349,22 @@ html[data-theme="light"] #light-lamp{opacity:1}
 }
 .uc-col-body li{list-style:none;padding-left:0;margin-bottom:4px}
 .uc-col-body li::before{content:'— ';color:var(--text-3)}
-.uc-toggle{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  width:100%;padding:8px clamp(16px,3vw,32px);
-  background:none;border:none;cursor:none;pointer-events:all;
-  font-family:var(--mono);font-size:clamp(9px,.83vw,11px);
-  letter-spacing:.32em;text-transform:uppercase;
-  color:var(--iris);
-  transition:color var(--theme-dur);
-}
-.uc-toggle .uc-arrow{
-  display:inline-block;
-  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
-  font-size:.9em;
-}
-.uc-toggle.open .uc-arrow{transform:rotate(180deg)}
 .pr-tag{font-family:var(--mono);font-size:clamp(8px,.8vw,10px);letter-spacing:.22em;text-transform:uppercase;padding:5px 7px;border:1px solid var(--line);color:var(--text-3);border-radius:1px;transition:color var(--theme-dur),border-color var(--theme-dur)}
+/* The one project you can actually drive. Every other row offers a look, so
+   this is a category apart from the tags beside it rather than a louder tag —
+   moss against their grey, and it breathes so the eye finds it on the way past. */
+.pr-tag.pr-live{
+  color:var(--moss);border-color:var(--moss);letter-spacing:.26em;
+  animation:pr-live-breathe 3.6s ease-in-out infinite;
+}
+@keyframes pr-live-breathe{
+  0%,100%{box-shadow:none}
+  50%{box-shadow:0 0 0 1px rgba(107,140,82,.22),0 0 12px -2px rgba(107,140,82,.42)}
+}
+.proj-row:hover .pr-tag.pr-live{color:var(--bone);border-color:var(--bone);animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.pr-tag.pr-live{animation:none}}
+/* the other rows point at themselves with an em dash; this one points onward */
+.proj-row:hover .pr-arrow.go{color:var(--moss)}
 .pr-arrow{font-family:var(--mono);font-size:clamp(10px,.93vw,12px);letter-spacing:.18em;color:var(--text-3);justify-self:end;transition:color var(--theme-dur);align-self:center}
 .proj-row:hover .pr-arrow{color:var(--bone)}
 /* .row-preview and .row-shader CSS */
@@ -550,7 +543,6 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
 @media(max-width:640px){.proj-row{grid-template-columns:clamp(24px,6vw,36px) 1fr}.proj-row>div:empty{display:none}.pr-tags{display:none}.pr-arrow{display:none}.h-foot{grid-template-columns:1fr auto}.h-scroll{display:none}#about{padding-top:clamp(100px,14vh,140px)}}
 @media(max-width:640px){
   .modal-banner{grid-template-columns:auto 1fr auto;padding-left:14px;padding-right:14px}
-  .modal-ext{letter-spacing:.06em;max-width:69px;text-align:center;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .modal-title{min-width:0;white-space:normal;display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
   .modal-close{letter-spacing:.06em;white-space:nowrap}
 }
@@ -579,128 +571,6 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
   letter-spacing:.01em;
   line-height:1.8;
 }
-/* ── SHADER SCRUBBER ── */
-#shader-ctrl{
-  flex-shrink:0;display:flex;flex-direction:column;align-items:center;
-  gap:8px;overflow:hidden;
-  max-height:0;padding:0 clamp(16px,3vw,32px);
-  background:var(--ink);border-bottom:1px solid var(--line);
-  transition:max-height .4s cubic-bezier(.16,1,.3,1),padding .4s cubic-bezier(.16,1,.3,1),background var(--theme-dur),border-color var(--theme-dur);
-  pointer-events:all;
-}
-#shader-ctrl.open{
-  max-height:120px;padding:12px clamp(16px,3vw,32px);
-}
-#sc-desc-bar{
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:16px;
-  padding:10px clamp(16px,3vw,32px);
-  background:var(--ink);
-  transition:background var(--theme-dur);
-}
-#sc-desc{
-  margin:0;font-family:var(--syne);font-size:clamp(10px,.88vw,12px);
-  letter-spacing:.01em;color:var(--text-2);
-  transition:color var(--theme-dur);
-}
-#sc-ctrl-btn{
-  position:relative;
-  background:none;border:1px solid var(--line);cursor:pointer;
-  font-family:var(--mono);font-size:clamp(7px,.6vw,9px);
-  letter-spacing:.28em;text-transform:uppercase;color:var(--text-3);
-  padding:4px 10px;flex-shrink:0;
-  transition:color .18s,border-color .18s,background var(--theme-dur);
-  animation:sc-breathe-btn 3.8s ease-in-out infinite;
-}
-#sc-ctrl-btn:hover{color:var(--bone);border-color:var(--text-2);animation-play-state:paused;box-shadow:none;text-shadow:none;}
-#sc-ctrl-btn.open{animation:none;}
-@keyframes sc-breathe-btn{
-  0%,100%{box-shadow:none;text-shadow:none;color:var(--text-3);}
-  50%{
-    box-shadow:
-      0 0 0 1px rgba(168,228,108,1),
-      inset 0 0 6px rgba(107,140,82,.22),
-      0 0 4px rgba(168,228,108,.85),
-      0 0 11px rgba(107,140,82,.32);
-    text-shadow:0 0 4px rgba(168,228,108,1),0 0 9px rgba(107,140,82,.42);
-    color:rgba(168,228,108,1);
-  }
-}
-@keyframes sc-breathe{
-  0%,100%{text-shadow:none;color:var(--text-3);}
-  50%{
-    text-shadow:0 0 4px rgba(168,228,108,1),0 0 9px rgba(107,140,82,.42);
-    color:rgba(168,228,108,1);
-  }
-}
-#sc-ctrl-btn .sc-btn-a,
-#sc-ctrl-btn .sc-btn-b{transition:opacity .3s;}
-#sc-ctrl-btn .sc-btn-b{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  opacity:0;
-}
-#sc-ctrl-btn.open .sc-btn-a{opacity:0;}
-#sc-ctrl-btn.open .sc-btn-b{opacity:1;}
-#sc-controls-row{
-  display:flex;align-items:center;justify-content:center;gap:14px;
-}
-#sc-label{
-  font-family:var(--mono);font-size:clamp(8px,.72vw,10px);
-  letter-spacing:.3em;text-transform:uppercase;white-space:nowrap;
-  color:var(--text-3);flex-shrink:0;transition:color var(--theme-dur);
-  animation:sc-breathe 3.8s ease-in-out infinite;
-}
-#sc-track-wrap{display:flex;align-items:center;gap:9px;}
-.sc-ep{
-  font-family:var(--mono);font-size:clamp(8px,.66vw,10px);
-  letter-spacing:.24em;text-transform:uppercase;
-  color:var(--text-3);flex-shrink:0;transition:color var(--theme-dur);
-}
-#sc-scrub{
-  width:clamp(160px,18vw,240px);flex:none;
-  -webkit-appearance:none;appearance:none;
-  height:2px;background:linear-gradient(to right,var(--bone) var(--fill,0%),var(--line) var(--fill,0%));
-  border-radius:1px;outline:none;cursor:none;
-}
-#sc-scrub::-webkit-slider-thumb{
-  -webkit-appearance:none;width:8px;height:8px;border-radius:50%;
-  background:var(--bone);cursor:none;
-}
-#sc-scrub::-moz-range-thumb{
-  width:8px;height:8px;border-radius:50%;border:none;
-  background:var(--bone);cursor:none;
-}
-#sc-ff,#sc-playpause{
-  background:none;border:none;cursor:pointer;
-  display:flex;align-items:center;gap:5px;
-  font-family:var(--mono);font-size:clamp(10px,.9vw,12px);
-  letter-spacing:.1em;color:var(--text-3);
-  transition:color .18s;padding:0;flex-shrink:0;
-}
-@media(hover:hover){#sc-ff:hover,#sc-playpause:hover{color:var(--bone);}}
-#sc-ff-icon{display:block;width:14px;height:10px;}
-#sc-pips{display:flex;align-items:flex-end;gap:2px;height:10px;}
-.sc-pip{
-  width:2px;border-radius:1px;
-  background:var(--line);
-  transition:background .14s cubic-bezier(.4,0,.2,1),height .14s cubic-bezier(.4,0,.2,1),border-color var(--theme-dur);
-}
-.sc-pip:nth-child(1){height:4px;}
-.sc-pip:nth-child(2){height:6px;}
-.sc-pip:nth-child(3){height:9px;}
-#sc-ff[data-step="1"] .sc-pip:nth-child(1){background:var(--iris);}
-#sc-ff[data-step="2"] .sc-pip:nth-child(1),
-#sc-ff[data-step="2"] .sc-pip:nth-child(2){background:var(--iris);}
-#sc-ff[data-step="3"] .sc-pip{background:var(--bone);}
-#sc-ff[data-step="1"],
-#sc-ff[data-step="2"],
-#sc-ff[data-step="3"]{color:var(--text-2);}
-#sc-playpause{font-size:clamp(11px,1vw,13px);}
-#sc-playpause svg{display:block;width:7px;height:10px;}
-#sc-time{
-  font-family:var(--mono);font-size:clamp(9px,.76vw,11px);
-  letter-spacing:.16em;color:var(--text-3);flex-shrink:0;
-  min-width:3.2ch;text-align:right;transition:color var(--theme-dur);
-}
 
 /* the light — barely there, no visible shape */
 #ink-orb{
@@ -715,39 +585,33 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
 }
 
 /* ── MAGAZINE OVERLAY ─────────────────────────────────────── */
-.mag-overlay{
-  position:absolute;inset:0;z-index:20;
-  background:var(--ink);
+/* the details document — now the modal itself, not an overlay over an iframe */
+.mag-doc{
+  flex:1;min-height:0;
   overflow-y:auto;overflow-x:hidden;
   scrollbar-width:none;
-  clip-path:inset(0 0 100% 0);
-  transition:clip-path .82s cubic-bezier(.16,1,.3,1),background var(--theme-dur);
-  pointer-events:none;
+  background:var(--ink);
+  pointer-events:all;
+  transition:background var(--theme-dur);
 }
-.mag-overlay::-webkit-scrollbar{display:none}
-.mag-overlay.open{clip-path:inset(0 0 0% 0);pointer-events:all}
+.mag-doc::-webkit-scrollbar{display:none}
 
-.mag-topbar{
-  position:sticky;top:0;z-index:5;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:clamp(11px,1.8vh,17px) clamp(20px,4vw,56px);
+/* in-development marker — a state, not a gate */
+.uc-strip{
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:9px clamp(16px,3vw,32px);
   background:var(--ink);border-bottom:1px solid var(--line);
   transition:background var(--theme-dur),border-color var(--theme-dur);
 }
-.mag-topbar-label{
+.uc-strip-dot{
+  width:5px;height:5px;border-radius:50%;background:var(--iris);
+  animation:pulse-iris 2s ease-in-out infinite;flex-shrink:0;
+}
+.uc-strip-label{
   font-family:var(--mono);font-size:clamp(9px,.83vw,11px);
-  letter-spacing:.4em;text-transform:uppercase;color:var(--text-3);
+  letter-spacing:.36em;text-transform:uppercase;color:var(--iris);
   transition:color var(--theme-dur);
 }
-.mag-back{
-  background:none;border:none;cursor:none;pointer-events:all;
-  font-family:var(--mono);font-size:clamp(9px,.88vw,11px);
-  letter-spacing:.28em;text-transform:uppercase;
-  color:var(--text-2);padding:0;
-  display:inline-flex;align-items:center;gap:8px;
-  transition:color .2s;
-}
-.mag-back:hover{color:var(--hi)}
 
 .mag-hero{
   display:grid;grid-template-columns:clamp(40px,5vw,72px) 1fr;
@@ -789,29 +653,6 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
   color:var(--hi);transition:color var(--theme-dur);
 }
 .mag-headline em{font-style:normal;color:var(--moss)}
-.mag-img-wrap{
-  align-self:end;position:relative;overflow:hidden;
-  border:1px solid var(--line);aspect-ratio:16/10;
-  transition:border-color var(--theme-dur);
-}
-.mag-img-wrap::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(19,22,25,.7) 0%,transparent 55%);
-  pointer-events:none;z-index:1;
-}
-.mag-img{
-  width:100%;height:100%;object-fit:cover;display:block;
-  filter:contrast(1.04) brightness(.88);
-  transition:transform .7s cubic-bezier(.16,1,.3,1),filter .4s;
-}
-.mag-img-wrap:hover .mag-img{transform:scale(1.04);filter:contrast(1.06) brightness(.95)}
-.mag-img-caption{
-  position:absolute;bottom:0;left:0;right:0;z-index:2;
-  padding:8px 12px;
-  font-family:var(--mono);font-size:clamp(8px,.75vw,10px);
-  letter-spacing:.24em;text-transform:uppercase;
-  color:var(--bone);opacity:.55;
-}
 
 .mag-content{
   display:grid;grid-template-columns:1fr 1fr;
@@ -838,6 +679,7 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
   line-height:1.88;color:var(--text-2);
   transition:color var(--theme-dur);
 }
+.mag-desc-body + .mag-desc-body{margin-top:1.1em}
 .mag-status-group{margin-bottom:clamp(28px,4.5vh,44px)}
 .mag-group-label{
   font-family:var(--mono);font-size:clamp(9px,.83vw,11px);
@@ -885,39 +727,144 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
   color:var(--text-3);border-radius:1px;
   transition:color var(--theme-dur),border-color var(--theme-dur);
 }
+/* under the hood — a build note, so it gets its own mark */
+.mag-group-label.hood::before{
+  content:'';width:6px;height:6px;flex-shrink:0;
+  background:var(--moss);transform:rotate(45deg);
+}
+/* nothing in the right column — let the prose have the width */
+.mag-content.solo{grid-template-columns:1fr}
+.mag-content.solo .mag-desc-col{border-right:none}
+.mag-content.solo .mag-desc-body{max-width:64ch}
+
+/* ── PLATES — the screenshots ────────────────────────────────── */
+.mag-hero-plate{
+  position:relative;overflow:hidden;
+  aspect-ratio:16/9;background:var(--faint);
+  border-bottom:1px solid var(--line);
+  transition:background var(--theme-dur),border-color var(--theme-dur);
+}
+.mag-hero-plate img,.mag-hero-plate video{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:contrast(1.04) brightness(.92);
+}
+.mag-hero-plate::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(19,22,25,.55) 0%,transparent 46%);
+}
+html[data-theme="light"] .mag-hero-plate::after{
+  background:linear-gradient(to top,rgba(240,229,213,.5) 0%,transparent 46%);
+}
+.mag-hero-plate .mag-plate-cap{
+  position:absolute;left:0;bottom:0;z-index:2;
+}
+
+.mag-inline-plate{margin:clamp(30px,5vh,48px) 0 0}
+.mag-inline-plate .mag-plate-frame{border:1px solid var(--line);aspect-ratio:16/9;transition:border-color var(--theme-dur)}
+.mag-inline-plate .mag-plate-cap{padding-left:0;padding-right:0;padding-bottom:0}
+@media(hover:hover){
+  .mag-inline-plate:hover .mag-plate-frame img,
+  .mag-inline-plate:hover .mag-plate-frame video{transform:scale(1.03);filter:contrast(1.06) brightness(1)}
+}
+.mag-plates{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  border-top:1px solid var(--line);
+  transition:border-color var(--theme-dur);
+}
+.mag-plate{
+  position:relative;margin:0;
+  border-bottom:1px solid var(--line);
+  transition:border-color var(--theme-dur);
+}
+.mag-plate:nth-child(odd){border-right:1px solid var(--line)}
+/* an odd final plate has no neighbour — drop the rule that implies an empty cell */
+.mag-plate:last-child:nth-child(odd){border-right:none}
+.mag-plate-frame{
+  position:relative;overflow:hidden;
+  aspect-ratio:16/10;background:var(--faint);
+  transition:background var(--theme-dur);
+}
+.mag-plate-frame img,.mag-plate-frame video{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:contrast(1.04) brightness(.9);
+  transition:transform .7s cubic-bezier(.16,1,.3,1),filter .45s ease;
+}
+@media(hover:hover){
+  .mag-plate:hover .mag-plate-frame img,
+  .mag-plate:hover .mag-plate-frame video{transform:scale(1.03);filter:contrast(1.06) brightness(1)}
+}
+.mag-plate-cap{
+  display:flex;align-items:baseline;gap:12px;
+  padding:11px clamp(14px,2.2vw,22px) clamp(13px,2vh,17px);
+  font-family:var(--mono);font-size:clamp(9px,.8vw,11px);
+  letter-spacing:.16em;color:var(--text-3);
+  transition:color var(--theme-dur);
+}
+.mag-plate-num{letter-spacing:.34em;color:var(--moss);flex-shrink:0;transition:color var(--theme-dur)}
+
+/* ── THE DOOR ────────────────────────────────────────────────── */
+.mag-enter{
+  flex-shrink:0;position:relative;overflow:hidden;
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;
+  padding:clamp(18px,3vh,30px) clamp(20px,4vw,56px);
+  border-top:1px solid var(--line);
+  background:var(--ink);
+  text-decoration:none;cursor:none;pointer-events:all;
+  transition:background var(--theme-dur),border-color var(--theme-dur);
+}
+.mag-enter::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(107,140,82,.15),transparent 72%);
+  opacity:0;transition:opacity .45s ease;
+}
+.mag-enter::after{
+  content:'';position:absolute;top:-1px;left:0;right:0;height:1px;
+  background:var(--moss);pointer-events:none;
+  transform:scaleX(0);transform-origin:0 50%;
+  transition:transform .62s cubic-bezier(.16,1,.3,1);
+}
+.mag-enter:hover::before,.mag-enter:focus-visible::before{opacity:1}
+.mag-enter:hover::after,.mag-enter:focus-visible::after{transform:scaleX(1)}
+.mag-enter:focus-visible{outline:1px solid var(--moss);outline-offset:-3px}
+.mag-enter:active{background:var(--faint)}
+.mag-enter-word{
+  position:relative;z-index:1;display:block;
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(24px,3.6vw,46px);line-height:1;letter-spacing:-.03em;
+  color:var(--hi);transition:color .3s ease;
+}
+.mag-enter:hover .mag-enter-word,
+.mag-enter:focus-visible .mag-enter-word{color:var(--bone)}
+.mag-enter-url{
+  position:relative;z-index:1;display:block;margin-top:9px;
+  font-family:var(--mono);font-size:clamp(9px,.82vw,11px);
+  letter-spacing:.26em;color:var(--text-3);
+  transition:color var(--theme-dur);
+}
+.mag-enter-arrow{
+  position:relative;z-index:1;justify-self:end;
+  font-family:var(--mono);font-size:clamp(20px,2.6vw,32px);
+  color:var(--moss);line-height:1;
+  transition:transform .5s cubic-bezier(.16,1,.3,1);
+}
+.mag-enter-note{color:var(--text-3);opacity:.72}
+.mag-enter:hover .mag-enter-arrow,
+.mag-enter:focus-visible .mag-enter-arrow{transform:translateX(9px)}
+
 @media(max-width:640px){
   .mag-hero{grid-template-columns:clamp(32px,6vw,44px) 1fr}
   .mag-hero-inner{padding:clamp(28px,4vh,44px) clamp(16px,4vw,32px) clamp(24px,4vh,40px)}
   .mag-content{grid-template-columns:1fr}
   .mag-desc-col{border-right:none;border-bottom:1px solid var(--line)}
   .mag-footer{flex-direction:column;align-items:flex-start;gap:14px}
+  .mag-plates{grid-template-columns:1fr}
+  .mag-plate:nth-child(odd){border-right:none}
+  .mag-hero-plate{aspect-ratio:4/3}
+}
+@media(prefers-reduced-motion:reduce){
+  .mag-plate-frame img,.mag-enter::after,.mag-enter-arrow{transition:none}
 }
 
-/* ── MODAL TAB STRIP ── */
-.tab-strip{
-  position:relative;flex-shrink:0;z-index:10;
-  display:flex;align-items:stretch;justify-content:center;
-  background:var(--ink);border-bottom:1px solid var(--line);
-  transition:background var(--theme-dur),border-color var(--theme-dur);
-}
-.tab-btn{
-  background:none;border:none;cursor:none;pointer-events:all;
-  font-family:var(--mono);font-size:clamp(9px,.83vw,11px);
-  letter-spacing:.36em;text-transform:uppercase;color:var(--text-3);
-  padding:clamp(10px,1.8vh,14px) clamp(20px,3.5vw,40px);
-  border-right:1px solid var(--line);
-  position:relative;overflow:hidden;
-  transition:color .2s,border-color var(--theme-dur);
-}
-.tab-btn::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;
-  height:1px;background:var(--moss);
-  transform:scaleX(0);transform-origin:left;
-  transition:transform .35s cubic-bezier(.16,1,.3,1);
-}
-.tab-btn.active{color:var(--hi)}
-.tab-btn.active::after{transform:scaleX(1)}
-.tab-btn:hover:not(.active){color:var(--text-2)}
 </style>
 </head>
 <body>
@@ -942,14 +889,11 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
 <div id="curtain"></div>
 
 <!-- ── PROJECT MODAL ── -->
-<!-- preload iframes — run in background, swapped into modal on open -->
-<div id="preload-frames" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;pointer-events:none;opacity:0;visibility:hidden;" aria-hidden="true">
-  <iframe id="pf-3" src="https://santosblu.com" allow="autoplay; fullscreen; gyroscope; accelerometer; device-orientation" title="preload-santosblu"></iframe>
-</div>
-
 <div id="proj-modal" role="dialog" aria-modal="true" aria-label="Project detail">
   <div class="modal-banner">
-    <a class="modal-ext" id="modal-ext" href="#" target="_blank" rel="noopener" aria-label="Open in new tab">open in new tab ↗</a>
+    <!-- the door at the foot of the details screen opens the site now; a second
+         link up here that went somewhere subtly different only split the choice -->
+    <span></span>
     <span class="modal-title" id="modal-title-label"></span>
     <button class="modal-close" id="modal-close" aria-label="Close">× close</button>
   </div>
@@ -1044,7 +988,7 @@ END EASTER EGGS -->
     <div class="pr-num" data-reveal="rise" data-d="1">01</div>
     <div>
       <div class="pr-name" data-reveal="wipe" data-d="1">Os<em>quello</em></div>
-      <div class="pr-tags" data-reveal="scatter" data-d="1"><span class="pr-tag">Music Release</span><span class="pr-tag">Immersive</span><span class="pr-tag">Easter Egg</span></div>
+      <div class="pr-tags" data-reveal="scatter" data-d="1"><span class="pr-tag">Music Release</span><span class="pr-tag">Retro Minimalist</span><span class="pr-tag">Easter Egg</span></div>
       <div class="pr-oneliner" data-reveal="rise" data-d="2">The site is the artwork — visitors enter a space that reveals the record gradually.</div>
     </div>
     <div></div>
@@ -1062,26 +1006,26 @@ END EASTER EGGS -->
     <div class="pr-arrow" data-reveal="rise" data-d="2">—</div>
   </a>
   <div class="wk-divider" data-reveal="rise">
-    <span>In Beta</span>
+    <span>In Development</span>
   </div>
+  <a class="proj-row" href="#" data-proj="4" data-modal="4">
+    <div class="row-bg"><canvas class="row-shader" id="shd4" aria-hidden="true"></canvas></div>
+    <div class="pr-num" data-reveal="rise" data-d="1">03</div>
+    <div>
+      <div class="pr-name" data-reveal="wipe" data-d="3"><em>earth</em>town</div>
+      <div class="pr-tags" data-reveal="scatter" data-d="3"><span class="pr-tag">Browser OS</span><span class="pr-tag">Live Social</span><span class="pr-tag pr-live">Biggest project</span></div>
+      <div class="pr-oneliner" data-reveal="rise" data-d="4">A whole operating system in the browser — windows, live rooms, shared listening, and admin tools you can drive yourself.</div>
+    </div>
+    <div></div>
+    <div class="pr-arrow go" data-reveal="rise" data-d="2">→</div>
+  </a>
   <a class="proj-row" href="#" data-proj="1" data-modal="1">
     <div class="row-bg"><canvas class="row-shader" id="shd1" aria-hidden="true"></canvas></div>
-    <div class="pr-num" data-reveal="rise" data-d="1">03</div>
+    <div class="pr-num" data-reveal="rise" data-d="1">04</div>
     <div>
       <div class="pr-name" data-reveal="wipe"><em>Arc</em>etype</div>
       <div class="pr-tags" data-reveal="scatter"><span class="pr-tag">Fashion Brand</span><span class="pr-tag">Canvas UX</span><span class="pr-tag">E-commerce</span></div>
       <div class="pr-oneliner" data-reveal="rise" data-d="2">A London fashion label platform — custom spray paint mechanic, Shopify integrated, concept-first design.</div>
-    </div>
-    <div></div>
-    <div class="pr-arrow" data-reveal="rise" data-d="2">—</div>
-  </a>
-  <a class="proj-row" href="#" data-proj="4" data-modal="4">
-    <div class="row-bg"><canvas class="row-shader" id="shd4" aria-hidden="true"></canvas></div>
-    <div class="pr-num" data-reveal="rise" data-d="1">04</div>
-    <div>
-      <div class="pr-name" data-reveal="wipe" data-d="3"><em>earth</em>town</div>
-      <div class="pr-tags" data-reveal="scatter" data-d="3"><span class="pr-tag">Social Platform</span><span class="pr-tag">Chatroom</span><span class="pr-tag">Arts Collective</span></div>
-      <div class="pr-oneliner" data-reveal="rise" data-d="4">A community portal for an arts collective — accounts, avatars, uploads, and a chatroom at the centre.</div>
     </div>
     <div></div>
     <div class="pr-arrow" data-reveal="rise" data-d="2">—</div>
@@ -1468,7 +1412,12 @@ document.querySelectorAll('.proj-row').forEach(row=>{
 /* ── REVEALS ─────────────────────────────────────────────────────── */
 document.querySelectorAll('[data-reveal="scatter"] .pr-tag').forEach((tag,i)=>{tag.style.setProperty('--tx',(Math.random()-.5)*48+'px');tag.style.setProperty('--ty',(Math.random()-.5)*32+'px');tag.style.transitionDelay=(.04+i*.055)+'s';});
 const revIO=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('on');revIO.unobserve(e.target);});},{threshold:.08,rootMargin:'0px 0px -24px 0px'});
-document.querySelectorAll('[data-reveal]').forEach(el=>revIO.observe(el));
+/* A wipe starts as clip-path:inset(0 100% 0 0) — zero visible area — so its
+   intersection ratio is pinned at 0 and a threshold of .08 can never be met.
+   That left every project name clipped shut for good. Same callback, own
+   observer, threshold 0. */
+const wipeIO=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('on');wipeIO.unobserve(e.target);});},{threshold:0,rootMargin:'0px 0px -24px 0px'});
+document.querySelectorAll('[data-reveal]').forEach(el=>(el.dataset.reveal==='wipe'?wipeIO:revIO).observe(el));
 const skillIO=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;e.target.querySelectorAll('.disc-name').forEach((n,i)=>{setTimeout(()=>{n.style.transition=`opacity .7s ease ${i*80}ms, border-color .6s ease, color .6s ease`;n.style.opacity='1';},50);});skillIO.unobserve(e.target);});},{threshold:.2});
 document.querySelectorAll('.disc-name').forEach(n=>n.style.opacity='0');
 const sk=document.getElementById('skills');if(sk)skillIO.observe(sk);
@@ -1669,174 +1618,171 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
   const titleLbl = document.getElementById('modal-title-label');
   const closeBtn = document.getElementById('modal-close');
   
-  /* ── project data ── */
+  /* ── project data ──
+     status   'live' | 'building'   — drives the badge only; every project
+                                      gets the full details screen either way
+     ready / building                — the build-progress report
+     underHood                       — how it was made
+     shots    [{src,cap}]            — plate 01 becomes the hero image, the
+                                      rest fall into a two-up grid below.
+                                      Drop files in media/ and list them here;
+                                      an empty array simply renders no plates. */
   const PROJECTS = {
-    1:{num:'01',label:'Arcetype',titleHtml:'<em>Arc</em>etype',tags:['Fashion Brand','Canvas UX','E-commerce'],url:'https://thatsantosguy.github.io/arcetype/index.html',underConstruction:true,
+    1:{num:'04',label:'Arcetype',titleHtml:'<em>Arc</em>etype',tags:['Fashion Brand','Canvas UX','E-commerce'],url:'https://thatsantosguy.github.io/arcetype/index.html',status:'building',
       description:'A platform for a London fashion label operating at the edge of streetwear and conceptual design. The site features a custom click-and-drag spray paint mechanic inspired by Microsoft Paint alongside interchangeable image backdrops — a reflection of the brand\'s origins in one-of-one spray painted garments.',
       ready:['Interactive drag-to-cart functionality','Product architecture — Shopify integrated','Paint mechanic','General infrastructure'],
-      building:['Final aesthetic refinement','Refine customising interface','Campaign editorial pages']
+      building:['Final aesthetic refinement','Refine customising interface','Campaign editorial pages'],
+      shots:[{src:'media/arcetype.webm',cap:'paint laid down, then a garment carried in'}]
     },
-    2:{num:'02',label:'Osquello',url:'https://osquello.com',underConstruction:false,
-      tagline:'An early 2000s internet inspired website with a hidden outtakes album download easter egg.'},
-    3:{num:'03',label:'santos bluː',url:'https://santosblu.com',underConstruction:false,shaderControl:true,
-      tagline:'An immersive artist site with a real time sunrise animation.'},
-    4:{num:'04',label:'Earthtown',titleHtml:'<em>earth</em>town',tags:['Social Platform','Chatroom','Arts Collective'],url:'https://thatsantosguy.github.io/earthtown/index.html',underConstruction:true,
-      description:'A community portal for an artist collective, designed as a shared space for music, visuals, launches, and exclusive content. Users can create accounts, customise avatars, and upload their own material, which is then reviewed and curated by administrators.',
-      ready:['Chat room infrastructure — shared audio players and file uploads','Member profiles and avatar generator','Content upload system and admin framework infrastructure'],
-      building:['Final branding and visual treatment','Infrastructure for specific content launches — music video, clothing, etc.','Flexible rollout system for campaign-specific releases']
+    2:{num:'01',label:'Osquello',titleHtml:'Os<em>quello</em>',tags:['Music Release','Retro Minimalist','Easter Egg'],url:'https://osquello.com',status:'live',
+      description:'A release site for Osquello\'s album, built in the visual language of the early-2000s web: system windows, hard edges, no smoothing. Rather than listing the record on a page, it spreads across a space visitors move through. A second album of outtakes is hidden inside it and downloads for anyone who finds it.',
+      underHood:['Early-2000s interface built from scratch, not a template','Tracks surface as you explore, rather than from a track list','Hidden outtakes album with its own download','One page, no framework, no build step'],
+      shots:[{src:'media/osquello.webm',cap:'the way in, unmarked and never in one place'}]
     },
-    5:{num:'05',label:'Mau from Nowhere',titleHtml:'mau from <em>nowhere</em>',tags:['Artist Site','CMS','Self-managed'],tabs:true,url:'https://studio-212.github.io/mfn/',underConstruction:true,
+    3:{num:'02',label:'santos bluː',titleHtml:'santos <em>bluː</em>',tags:['Artist Site','Atmospheric','Personal'],url:'https://santosblu.com',status:'live',shaderControl:true,previewNote:'time controls',
+      description:'An artist site for santos bluː. A WebGL shader takes the sky through a single arrival: it opens just past the peak, drains down into full night, and settles with the sun barely showing, then keeps drifting toward dawn. It also holds a custom music player and an archive locked behind a passphrase.',
+      underHood:['A WebGL sky that traverses its ambient curve once on arrival, then drifts','Sky and water kept on separate clocks — the water stays on real time so the ripples do not alias','The sky accepts a time offset, but only from studio212 — that is what the preview controls drive','Custom audio player, no third-party embed','Archive locked behind a passphrase','One HTML file, no framework, no build step'],
+      shots:[{src:'media/santosblu.webm',cap:'the arrival — peak, night, and back toward dawn'}]
+    },
+    4:{num:'03',label:'Earthtown',titleHtml:'<em>earth</em>town',tags:['Browser OS','Live Social','Collective'],url:'https://earthtown.life',status:'building',previewNote:'admin controls',
+      description:[
+        'A browser-based operating system for the Earthtown collective — windows, a dock, a menu bar, draggable files and a desktop members rearrange for themselves. It also runs live rooms, where members chat, see who else is online, and listen to the same track in sync.',
+        'Opening it from here gives you the admin view. You can rearrange the desktop, upload files and switch apps off for visitors, then toggle to the visitor view to see the result. Saving and publishing are disabled, and nothing you change leaves your browser.'
+      ],
+      ready:['Window manager — dock, menu bar, desktop icons, drag and drop','Live rooms — chat, presence, and a shared listening queue','Character creator with server-side background removal','Admin tools inside the OS — upload, arrange, save, publish','Uploads verified at the edge; no write credential in the browser','Demo admin mode — try out the tools'],
+      building:['Cross-device sync for the listening queue, plus a who\'s-listening list','Move broadcast settings out of local storage into the published manifest','Read-only notes published by admins'],
+      underHood:['Cloudflare Pages and R2 for media; Firebase only for the live social layer','Vanilla ES modules — no framework, no build step','Images re-encoded in the browser before upload, so EXIF never leaves the device','Edit, save and publish as three separate stages, committed by one atomic manifest swap','Demo mode opens by a postMessage handshake from this page and grants no server access'],
+      shots:[{src:'media/earthtown-desktop.webm',cap:'windows, dock and menu bar, moved around'},
+             {src:'media/earthtown-admin.webm',inline:true,cap:'the admin view, and the same desktop as a visitor meets it'}]
+    },
+    5:{num:'05',label:'Mau from Nowhere',titleHtml:'mau from <em>nowhere</em>',tags:['Artist Site','CMS','Self-managed'],url:'https://studio-212.github.io/mfn/',status:'building',previewNote:'site and admin panel',
       description:'An artist site for Mau from Nowhere — a space that holds his music, visuals, and biography in a single atmospheric world. Built with a custom admin panel so Mau can upload and update content himself, without touching code.',
       ready:['Admin panel and content management system','Biography and press section','Portrait and media framework'],
-      building:['Final visual treatment and atmospheric design']
+      building:['Awaiting content uploads from client'],
+      shots:[{src:'media/mau.webm',cap:'the menu filling in as you pass across it'}]
     }
   };
 
   /* ── open ── */
+  const PREVIEW_LABEL = { live:'view site', building:'try the build' };
+
+  function plateCap(n,cap){
+    return `<figcaption class="mag-plate-cap"><span class="mag-plate-num">PL. ${String(n).padStart(2,'0')}</span><span>${cap}</span></figcaption>`;
+  }
+
+  function statusGroup(label,cls,items){
+    if(!items||!items.length)return '';
+    return `<div class="mag-status-group">
+      <div class="mag-group-label ${cls}">${label}</div>
+      <ul class="mag-list">${items.map(i=>`<li class="mag-item">${i}</li>`).join('')}</ul>
+    </div>`;
+  }
+
   function openModal(id){
     const p=PROJECTS[id];
     if(!p)return;
 
-    titleLbl.textContent=`${p.num} — ${p.label}${p.underConstruction?' (beta)':''}`;
-    const extLink=document.getElementById('modal-ext');
-    if(extLink)extLink.href=p.url;
+    const building = p.status==='building';
+    titleLbl.textContent=`${p.num} — ${p.label}${building?' (in development)':''}`;
 
-    const ucBanner = p.underConstruction
-      ? `<div id="uc-strip" style="position:relative;flex-shrink:0;z-index:11;pointer-events:all">
-           <div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:8px clamp(16px,3vw,32px);background:var(--ink);border-bottom:1px solid var(--line);transition:background var(--theme-dur),border-color var(--theme-dur)">
-             <span style="width:5px;height:5px;border-radius:50%;background:var(--iris);display:inline-block;animation:pulse-iris 2s ease-in-out infinite;flex-shrink:0"></span>
-             <span style="font-family:var(--mono);font-size:clamp(9px,.83vw,11px);letter-spacing:.36em;text-transform:uppercase;color:var(--iris)">under construction — work in progress</span>
-           </div>
-           <button class="uc-toggle" id="uc-toggle" aria-expanded="false" style="background:var(--ink);border-bottom:1px solid var(--line);transition:background var(--theme-dur),border-color var(--theme-dur)">
-             <span>show details</span><span class="uc-arrow">↓</span>
-           </button>
-         </div>
-         <div id="uc-mag-zone" style="position:relative;flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden">
-           ${p.tabs?`<div class="tab-strip" id="tab-strip">
-             <button class="tab-btn active" data-tab="site">Site</button>
-             <button class="tab-btn" data-tab="admin">Admin Panel</button>
-           </div>`:''}
-           <div id="uc-iframe-zone" style="position:relative;flex:1;min-height:0;"></div>
-           <div class="mag-overlay" id="mag-overlay">
-             <div class="mag-hero">
-               <div class="mag-folio-col">
-                 <span class="mag-folio-num">${p.num} — in progress</span>
-               </div>
-               <div class="mag-hero-inner">
-                 <div class="mag-status-badge">in progress</div>
-                 <h2 class="mag-headline">${p.titleHtml||p.label}</h2>
-               </div>
-             </div>
-             <div class="mag-content">
-               <div class="mag-desc-col">
-                 <div class="mag-sec-label">About</div>
-                 <p class="mag-desc-body">${p.description}</p>
-               </div>
-               <div class="mag-status-col">
-                 <div class="mag-status-group">
-                   <div class="mag-group-label complete">Complete</div>
-                   <ul class="mag-list">${p.ready.map(i=>`<li class="mag-item">${i}</li>`).join('')}</ul>
-                 </div>
-                 <div class="mag-status-group">
-                   <div class="mag-group-label building">In Progress</div>
-                   <ul class="mag-list">${p.building.map(i=>`<li class="mag-item">${i}</li>`).join('')}</ul>
-                 </div>
-               </div>
-             </div>
-             ${p.tags?`<div class="mag-footer">
-               <span class="mag-footer-label">Tags</span>
-               <div class="mag-tags-row">${p.tags.map(t=>`<span class="mag-tag">${t}</span>`).join('')}</div>
-             </div>`:''}
-           </div>
+    /* A shot marked inline is placed under the About prose instead of the grid.
+       The status lists run far longer than the description, so that column
+       leaves a hole — and one plate alone in a two-up grid leaves a blank half.
+       This fills the first with the thing that was causing the second. */
+    const shots  = p.shots||[];
+    const num    = sh => shots.indexOf(sh)+1;
+    const inline = shots.filter(sh=>sh.inline);
+    const flow   = shots.filter(sh=>!sh.inline);
+    const hero   = flow[0];
+    const rest   = flow.slice(1);
+
+    /* a plate is a still or a clip depending on the file — a clip carries a
+       poster so the frame is never empty, and preloads nothing until it's seen */
+    const plateMedia = (sh,eager) => /\.webm$/i.test(sh.src)
+      ? `<video src="${sh.src}" poster="${sh.src.replace(/\.webm$/i,'-poster.webp')}"
+           muted loop playsinline preload="none" aria-label="${p.label} — ${sh.cap}"></video>`
+      : `<img src="${sh.src}" alt="${p.label} — ${sh.cap}" loading="${eager?'eager':'lazy'}">`;
+
+    const heroPlate = hero
+      ? `<div class="mag-hero-plate">
+           ${plateMedia(hero,true)}
+           ${plateCap(num(hero),hero.cap)}
          </div>`
       : '';
 
-    const preloaded = document.getElementById(`pf-${id}`);
-    const iframeEl = preloaded
-      ? preloaded
-      : document.createElement('iframe');
-    iframeEl.style.cssText=p.underConstruction
-      ? 'position:absolute;inset:0;width:100%;height:100%;border:none;display:block'
-      : 'width:100%;flex:1;border:none;display:block';
-    iframeEl.allow='autoplay; fullscreen; gyroscope; accelerometer; device-orientation';
-    iframeEl.title=p.label;
-    if(!preloaded) iframeEl.src=p.url;
+    const plates = rest.length
+      ? `<div class="mag-plates">${rest.map(sh=>`
+           <figure class="mag-plate">
+             <div class="mag-plate-frame">${plateMedia(sh,false)}</div>
+             ${plateCap(num(sh),sh.cap)}
+           </figure>`).join('')}
+         </div>`
+      : '';
 
-    body.innerHTML=`<div style="position:relative;flex:1;min-height:0;display:flex;flex-direction:column">${ucBanner}</div>`;
-    const bodyDiv=body.querySelector('div');
+    const statusCol = statusGroup('Complete','complete',p.ready)
+                    + statusGroup('In Progress','building',p.building)
+                    + statusGroup('Under the hood','hood',p.underHood);
 
-    if(p.tagline){
-      const descBar=document.createElement('div');
-      descBar.id='sc-desc-bar';
-      descBar.innerHTML=`<p id="sc-desc">${p.tagline}</p>${p.shaderControl?'<button id="sc-ctrl-btn" aria-label="Control time"><span class="sc-btn-a">control time</span><span class="sc-btn-b">close</span></button>':''}`;
-      bodyDiv.appendChild(descBar);
-    }
-
-    if(p.shaderControl){
-
-      const ctrl=document.createElement('div');
-      ctrl.id='shader-ctrl';
-      ctrl.innerHTML=`
-        <span id="sc-label">time controls:</span>
-        <div id="sc-controls-row">
-          <button id="sc-ff" aria-label="Fast forward" data-step="0">
-            <svg id="sc-ff-icon" viewBox="0 0 18 14" width="14" height="10" fill="currentColor" aria-hidden="true" style="display:block;width:14px;height:10px;flex-shrink:0"><polygon points="0,0 8,7 0,14"/><polygon points="9,0 18,7 9,14"/></svg>
-            <span id="sc-pips"><span class="sc-pip"></span><span class="sc-pip"></span><span class="sc-pip"></span></span>
-          </button>
-          <div id="sc-track-wrap">
-            <span class="sc-ep">dusk</span>
-            <input id="sc-scrub" type="range" min="0" max="540" step="0.5" value="0" aria-label="Scrub time of day">
-            <span class="sc-ep">dawn</span>
+    body.innerHTML = `
+      ${building?`<div class="uc-strip"><span class="uc-strip-dot"></span><span class="uc-strip-label">in development</span></div>`:''}
+      <div class="mag-doc" id="mag-doc">
+        <div class="mag-hero">
+          <div class="mag-folio-col"><span class="mag-folio-num">${p.num}</span></div>
+          <div class="mag-hero-inner"><h2 class="mag-headline">${p.titleHtml||p.label}</h2></div>
+        </div>
+        ${heroPlate}
+        <div class="mag-content${statusCol?'':' solo'}">
+          <div class="mag-desc-col">
+            <div class="mag-sec-label">About</div>
+            ${[].concat(p.description).map(par=>`<p class="mag-desc-body">${par}</p>`).join('')}
+            ${inline.map(sh=>`<figure class="mag-inline-plate">
+              <div class="mag-plate-frame">${plateMedia(sh,false)}</div>
+              ${plateCap(num(sh),sh.cap)}
+            </figure>`).join('')}
           </div>
-          <span id="sc-time">+0:00</span>
-          <button id="sc-playpause" aria-label="Pause">${PAUSE_SVG}</button>
-        </div>`;
-      bodyDiv.appendChild(ctrl);
-      initShaderClock(iframeEl);
+          ${statusCol?`<div class="mag-status-col">${statusCol}</div>`:''}
+        </div>
+        ${plates}
+        ${p.tags?`<div class="mag-footer">
+          <span class="mag-footer-label">Tags</span>
+          <div class="mag-tags-row">${p.tags.map(t=>`<span class="mag-tag">${t}</span>`).join('')}</div>
+        </div>`:''}
+      </div>
+      <a class="mag-enter" href="${p.noEmbed?p.url:`preview.html?p=${id}`}" target="_blank" rel="noopener">
+        <span>
+          <span class="mag-enter-word">${PREVIEW_LABEL[p.status]||PREVIEW_LABEL.live}</span>
+          <span class="mag-enter-url">${p.url.replace(/^https?:\/\//,'').replace(/\/$/,'')}<span class="mag-enter-note">${
+            p.noEmbed ? '' : ' — preview window' + (p.previewNote?' with '+p.previewNote:'')
+          }</span></span>
+        </span>
+        <span class="mag-enter-arrow" aria-hidden="true">→</span>
+      </a>`;
 
-      document.getElementById('sc-ctrl-btn').addEventListener('click',()=>{
-        const open=ctrl.classList.toggle('open');
-        document.getElementById('sc-ctrl-btn').classList.toggle('open',open);
-      });
+    /* Five clips decoding at once is what makes a page like this stutter, so a
+       clip runs only while it is actually on screen. Reduced motion keeps the
+       poster and never starts one. */
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const vids = body.querySelectorAll('video');
+    if(vids.length && !still){
+      const io=new IntersectionObserver(es=>es.forEach(e=>{
+        if(e.isIntersecting) e.target.play().catch(()=>{}); else e.target.pause();
+      }),{root:body.querySelector('.mag-doc'),threshold:.25});
+      vids.forEach(v=>io.observe(v));
     }
 
-    const iframeTarget = document.getElementById('uc-iframe-zone') || bodyDiv;
-    iframeTarget.appendChild(iframeEl);
-
-    // wire up magazine overlay if present
-    if(p.underConstruction){
-      const tog=document.getElementById('uc-toggle');
-      const mag=document.getElementById('mag-overlay');
-      tog.addEventListener('click',e=>{
-        e.stopPropagation();
-        const open=mag.classList.toggle('open');
-        tog.classList.toggle('open',open);
-        tog.setAttribute('aria-expanded',open);
-        tog.querySelector('span').textContent=open?'hide details':'show details';
-        if(!open) mag.scrollTop=0;
+    /* a plate that can't load leaves nothing behind rather than a broken box */
+    body.querySelectorAll('.mag-hero-plate img,.mag-plate img,.mag-hero-plate video,.mag-plate video').forEach(img=>{
+      img.addEventListener('error',()=>{
+        const holder=img.closest('.mag-plate')||img.closest('.mag-hero-plate');
+        if(holder)holder.remove();
+        const grid=body.querySelector('.mag-plates');
+        if(grid&&!grid.children.length)grid.remove();
       });
-      tog.addEventListener('mouseenter',()=>document.body.classList.add('chov'));
-      tog.addEventListener('mouseleave',()=>document.body.classList.remove('chov'));
+    });
 
-      if(p.tabs){
-        const adminFrame=document.createElement('iframe');
-        adminFrame.src='https://studio-212.github.io/mfn/mock-admin.html';
-        adminFrame.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:none;display:none';
-        iframeTarget.appendChild(adminFrame);
-        document.querySelectorAll('.tab-btn').forEach(btn=>{
-          btn.addEventListener('click',e=>{
-            e.stopPropagation();
-            document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-            btn.classList.add('active');
-            const t=btn.dataset.tab;
-            iframeEl.style.display=t==='site'?'block':'none';
-            adminFrame.style.display=t==='admin'?'block':'none';
-          });
-          btn.addEventListener('mouseenter',()=>document.body.classList.add('chov'));
-          btn.addEventListener('mouseleave',()=>document.body.classList.remove('chov'));
-        });
-      }
-    }
+    const door=body.querySelector('.mag-enter');
+    door.addEventListener('mouseenter',()=>document.body.classList.add('chov','cacc'));
+    door.addEventListener('mouseleave',()=>document.body.classList.remove('chov','cacc'));
 
     body.scrollTop=0;
     document.body.style.overflow='hidden';
@@ -1845,88 +1791,16 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
     document.title=`${p.label} — studio212`;
   }
 
-  /* ── shader clock ── */
-  // effectiveTime = shaderClock + offset (additive model)
-  // Default play: offset speed 0  → scrubber still, net animation = real time
-  // Paused:       offset speed -1 → cancels shader clock, animation frozen, scrubber drifts left
-  // FF steps:     offset speed >0 → scrubber moves right, net animation faster than real time
-  let _shaderRaf=null;
-  const PAUSE_SVG='<svg viewBox="0 0 10 14" width="7" height="10" fill="currentColor" aria-hidden="true" style="display:block;width:7px;height:10px;flex-shrink:0"><rect x="0" y="0" width="3.5" height="14" rx="0.5"/><rect x="6.5" y="0" width="3.5" height="14" rx="0.5"/></svg>';
-  const PLAY_SVG='<svg viewBox="0 0 11 14" width="7" height="10" fill="currentColor" aria-hidden="true" style="display:block;width:7px;height:10px;flex-shrink:0"><polygon points="0,0 11,7 0,14"/></svg>';
-
-  function initShaderClock(iframe){
-    const FF_SPEEDS=[3, 18, 75]; // offset/s for FF steps 1-3
-    const PAUSE_DRIFT=-1;       // exactly cancels shaderClock → frozen
-    let time=0, ffStep=0, paused=false, lastTs=null;
-    const scrub=document.getElementById('sc-scrub');
-    const pauseBtn=document.getElementById('sc-playpause');
-    const ffBtn=document.getElementById('sc-ff');
-    const timeEl=document.getElementById('sc-time');
-
-    function post(t){ iframe.contentWindow?.postMessage({type:'scrub',time:t},'https://santosblu.com'); }
-    function fmt(t){ const m=Math.floor(t/60),s=Math.floor(t%60); return `+${m}:${s.toString().padStart(2,'0')}`; }
-    function setFill(t){ const pct=(t/parseFloat(scrub.max)*100).toFixed(2); scrub.style.setProperty('--fill',pct+'%'); }
-    function getSpeed(){ return paused ? PAUSE_DRIFT : (ffStep>0 ? FF_SPEEDS[ffStep-1] : 0); }
-
-    function tick(ts){
-      const spd=getSpeed();
-      if(lastTs!=null && spd!==0){
-        time=Math.max(0, Math.min(parseFloat(scrub.max), time+(ts-lastTs)/1000*spd));
-        scrub.value=time;
-        timeEl.textContent=fmt(time);
-        setFill(time);
-        post(time);
-      }
-      lastTs=ts;
-      _shaderRaf=requestAnimationFrame(tick);
-    }
-
-    ffBtn.addEventListener('click',()=>{
-      ffStep=(ffStep+1)%(FF_SPEEDS.length+1);
-      if(paused){ paused=false; pauseBtn.innerHTML=PAUSE_SVG; }
-      ffBtn.dataset.step=ffStep;
-      lastTs=null;
-    });
-
-    pauseBtn.addEventListener('click',()=>{
-      paused=!paused;
-      if(paused) ffStep=0;
-      ffBtn.dataset.step=0;
-      pauseBtn.innerHTML=paused?PLAY_SVG:PAUSE_SVG;
-      lastTs=null;
-    });
-
-    scrub.addEventListener('input',()=>{
-      time=parseFloat(scrub.value);
-      timeEl.textContent=fmt(time);
-      setFill(time);
-      post(time);
-    });
-
-    post(time);
-    _shaderRaf=requestAnimationFrame(tick);
-  }
-
   /* ── close ── */
   function closeModal(){
-    if(_shaderRaf){cancelAnimationFrame(_shaderRaf);_shaderRaf=null;}
     modal.classList.remove('open');
-    const iframe=body.querySelector('iframe');
-    if(iframe){
-      const holder=document.getElementById('preload-frames');
-      if(iframe.id && iframe.id.startsWith('pf-') && holder){
-        holder.appendChild(iframe); // move back before clearing
-      } else {
-        iframe.src='';
-      }
-    }
-    while(body.firstChild)body.removeChild(body.firstChild); // safe clear
+    while(body.firstChild)body.removeChild(body.firstChild);
+    document.body.classList.remove('chov','cacc');
     document.body.style.overflow='';
     curEl.style.opacity='1';
     document.title='studio212';
   }
-
-  /* ── intercept project row clicks ── */
+11111  /* ── intercept project row clicks ── */
   document.querySelectorAll('[data-modal]').forEach(row=>{
     row.addEventListener('click',e=>{
       e.preventDefault();
