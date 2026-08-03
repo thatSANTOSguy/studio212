@@ -740,7 +740,12 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
 /* ── PLATES — the screenshots ────────────────────────────────── */
 .mag-hero-plate{
   position:relative;overflow:hidden;
-  aspect-ratio:16/9;background:var(--faint);
+  width:100%;background:var(--faint);
+  /* 16/9 across a wide window is most of a screen, so the height is capped. Set
+     as a height rather than aspect-ratio + max-height: with both, Chrome keeps
+     the ratio by shrinking the width instead, which leaves the plate short of
+     its own edges. 56.25vw is the 16/9 height; object-fit crops past that. */
+  height:min(56.25vw,62vh,560px);
   border-bottom:1px solid var(--line);
   transition:background var(--theme-dur),border-color var(--theme-dur);
 }
@@ -859,7 +864,7 @@ html[data-theme="light"] .mag-hero-plate::after{
   .mag-footer{flex-direction:column;align-items:flex-start;gap:14px}
   .mag-plates{grid-template-columns:1fr}
   .mag-plate:nth-child(odd){border-right:none}
-  .mag-hero-plate{aspect-ratio:4/3}
+  .mag-hero-plate{height:min(75vw,52vh)}
 }
 @media(prefers-reduced-motion:reduce){
   .mag-plate-frame img,.mag-enter::after,.mag-enter-arrow{transition:none}
@@ -1630,18 +1635,18 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
   const PROJECTS = {
     1:{num:'04',label:'Arcetype',titleHtml:'<em>Arc</em>etype',tags:['Fashion Brand','Canvas UX','E-commerce'],url:'https://thatsantosguy.github.io/arcetype/index.html',status:'building',
       description:'A platform for a London fashion label operating at the edge of streetwear and conceptual design. The site features a custom click-and-drag spray paint mechanic inspired by Microsoft Paint alongside interchangeable image backdrops — a reflection of the brand\'s origins in one-of-one spray painted garments.',
-      ready:['Interactive drag-to-cart functionality','Product architecture — Shopify integrated','Paint mechanic','General infrastructure'],
-      building:['Final aesthetic refinement','Refine customising interface','Campaign editorial pages'],
+      ready:['Drag a product straight into the cart','Product pages, stock and checkout running on Shopify','The spray paint mechanic','Core site structure'],
+      building:['Final visual polish','Reworking the customising interface','Campaign and editorial pages'],
       shots:[{src:'media/arcetype.webm',cap:'paint laid down, then a garment carried in'}]
     },
     2:{num:'01',label:'Osquello',titleHtml:'Os<em>quello</em>',tags:['Music Release','Retro Minimalist','Easter Egg'],url:'https://osquello.com',status:'live',
       description:'A release site for Osquello\'s album, built in the visual language of the early-2000s web: system windows, hard edges, no smoothing. Rather than listing the record on a page, it spreads across a space visitors move through. A second album of outtakes is hidden inside it and downloads for anyone who finds it.',
-      underHood:['Early-2000s interface built from scratch, not a template','Tracks surface as you explore, rather than from a track list','Hidden outtakes album with its own download','One page, no framework, no build step'],
+      underHood:['The release is built as a piece of software — a menu, a media player, a readme file','The record is found by moving through the site rather than picked off a list','A second album hidden behind an unmarked link, for anyone who looks','Album sales handled by Stripe','One hand-built page: loads fast, nothing to maintain'],
       shots:[{src:'media/osquello.webm',cap:'the way in, unmarked and never in one place'}]
     },
     3:{num:'02',label:'santos bluː',titleHtml:'santos <em>bluː</em>',tags:['Artist Site','Atmospheric','Personal'],url:'https://santosblu.com',status:'live',shaderControl:true,previewNote:'time controls',
       description:'An artist site for santos bluː. A WebGL shader takes the sky through a single arrival: it opens just past the peak, drains down into full night, and settles with the sun barely showing, then keeps drifting toward dawn. It also holds a custom music player and an archive locked behind a passphrase.',
-      underHood:['A WebGL sky that traverses its ambient curve once on arrival, then drifts','Sky and water kept on separate clocks — the water stays on real time so the ripples do not alias','The sky accepts a time offset, but only from studio212 — that is what the preview controls drive','Custom audio player, no third-party embed','Archive locked behind a passphrase','One HTML file, no framework, no build step'],
+      underHood:['The sky is drawn live, frame by frame, rather than being a looping video','It runs one full arc on arrival — light, then night, then first light — and keeps drifting after','Sky and water run on separate clocks, so the sky can be sped up without the water looking wrong','The time of day can be driven from outside the page — which is what the controls here do','A music player built into the site rather than an embed','A private archive behind a passphrase'],
       shots:[{src:'media/santosblu.webm',cap:'the arrival — peak, night, and back toward dawn'}]
     },
     4:{num:'03',label:'Earthtown',titleHtml:'<em>earth</em>town',tags:['Browser OS','Live Social','Collective'],url:'https://earthtown.life',status:'building',previewNote:'admin controls',
@@ -1649,15 +1654,15 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
         'A browser-based operating system for the Earthtown collective — windows, a dock, a menu bar, draggable files and a desktop members rearrange for themselves. It also runs live rooms, where members chat, see who else is online, and listen to the same track in sync.',
         'Opening it from here gives you the admin view. You can rearrange the desktop, upload files and switch apps off for visitors, then toggle to the visitor view to see the result. Saving and publishing are disabled, and nothing you change leaves your browser.'
       ],
-      ready:['Window manager — dock, menu bar, desktop icons, drag and drop','Live rooms — chat, presence, and a shared listening queue','Character creator with server-side background removal','Admin tools inside the OS — upload, arrange, save, publish','Uploads verified at the edge; no write credential in the browser','Demo admin mode — try out the tools'],
-      building:['Cross-device sync for the listening queue, plus a who\'s-listening list','Move broadcast settings out of local storage into the published manifest','Read-only notes published by admins'],
-      underHood:['Cloudflare Pages and R2 for media; Firebase only for the live social layer','Vanilla ES modules — no framework, no build step','Images re-encoded in the browser before upload, so EXIF never leaves the device','Edit, save and publish as three separate stages, committed by one atomic manifest swap','Demo mode opens by a postMessage handshake from this page and grants no server access'],
+      ready:['Windows, a dock and a menu bar — members arrange their own desktop','Live rooms: chat, who else is online, and music everyone hears in time','A character creator that cuts people out of their own photos','Everything is run from inside the site — upload, arrange, publish','Uploads are checked by the server, so nothing can be tampered with from a browser','A demo mode, so the admin tools can be tried without an account'],
+      building:['Keeping the shared music in time across devices, and showing who is listening','Moving the broadcast settings into the published content so they carry over','Notices from the admins that members can read but not edit'],
+      underHood:['Hosted on Cloudflare with media in object storage; Firebase runs only the live chat and accounts','No framework and no build step — content goes live without a developer','Photos are stripped of their location data in the browser before they ever upload','Edit, save and publish are separate steps, and publishing swaps the whole site at once, so nothing is left half-changed','The demo can only be switched on from this page, and can reach nothing on the server'],
       shots:[{src:'media/earthtown-desktop.webm',cap:'windows, dock and menu bar, moved around'},
              {src:'media/earthtown-admin.webm',inline:true,cap:'the admin view, and the same desktop as a visitor meets it'}]
     },
     5:{num:'05',label:'Mau from Nowhere',titleHtml:'mau from <em>nowhere</em>',tags:['Artist Site','CMS','Self-managed'],url:'https://studio-212.github.io/mfn/',status:'building',previewNote:'site and admin panel',
       description:'An artist site for Mau from Nowhere — a space that holds his music, visuals, and biography in a single atmospheric world. Built with a custom admin panel so Mau can upload and update content himself, without touching code.',
-      ready:['Admin panel and content management system','Biography and press section','Portrait and media framework'],
+      ready:['An admin panel Mau updates the site from himself','Biography and press section','A structure for portraits and media'],
       building:['Awaiting content uploads from client'],
       shots:[{src:'media/mau.webm',cap:'the menu filling in as you pass across it'}]
     }
