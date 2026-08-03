@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>preview — studio212</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne+Mono&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#131619; --bone:#ede8e0; --hi:#c8bca8;
+  --text-2:#8c8680; --text-3:#6a6158; --line:#22272d;
+  --moss:#6b8c52; --iris:#4e5f7a;
+  --glow:#a8e46c;
+  --display:'Syne',sans-serif; --syne:'Syne',sans-serif; --mono:'Syne Mono',monospace;
+  --theme-dur:.6s;
+}
+html[data-theme="light"]{
+  --ink:#f0e5d5; --bone:#16181e; --hi:#1e2028;
+  --text-2:#2e3038; --text-3:#72604e; --line:#c0b09c;
+  --moss:#4e7236; --iris:#384d68;
+  --glow:#4e7236;
+}
+html,body{height:100%;background:var(--ink);overflow:hidden;transition:background var(--theme-dur)}
+body{font-family:var(--syne);color:var(--bone)}
+
+/* ── the frame ── */
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ink)}
+#stage iframe{
+  border:none;display:block;background:var(--ink);
+  width:100%;height:100%;
+  transition:width .55s cubic-bezier(.16,1,.3,1),max-width .55s cubic-bezier(.16,1,.3,1);
+}
+#stage.narrow iframe{width:430px;max-width:100%;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+
+/* ── loading veil ── */
+#veil{
+  position:fixed;inset:0;z-index:5;background:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:11px;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--text-3);
+  transition:opacity .6s ease,visibility .6s;
+}
+#veil.gone{opacity:0;visibility:hidden}
+
+/* ── blocked notice ── */
+#blocked{
+  position:fixed;inset:0;z-index:6;display:none;
+  flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  background:var(--ink);padding:32px;text-align:center;
+}
+#blocked.show{display:flex}
+#blocked h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,54px);letter-spacing:-.03em;color:var(--hi);line-height:1}
+#blocked p{font-family:var(--syne);font-size:15px;line-height:1.8;color:var(--text-2);max-width:46ch}
+#blocked a{
+  font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--moss);text-decoration:none;border:1px solid var(--line);padding:11px 20px;
+  transition:color .2s,border-color .2s;
+}
+#blocked a:hover,#blocked a:focus-visible{color:var(--bone);border-color:var(--text-2);outline:none}
+
+/* ── the cog ── */
+#cog{
+  position:fixed;z-index:40;right:clamp(16px,2.4vw,30px);bottom:clamp(16px,2.4vw,30px);
+  display:flex;align-items:center;gap:9px;
+  padding:5px;border-radius:999px;
+  background:none;border:1px solid transparent;cursor:pointer;
+  color:var(--text-3);
+  transition:color .3s ease,transform .45s cubic-bezier(.16,1,.3,1),
+             padding .5s cubic-bezier(.16,1,.3,1),background-color .4s ease,border-color .4s ease;
+}
+/* while it still has to announce itself — collapses for good on first open */
+#cog.labelled{
+  padding:5px 5px 5px 16px;
+  background:var(--ink);border-color:var(--line);
+  box-shadow:0 12px 32px -16px rgba(0,0,0,.72),0 0 28px -12px rgba(107,140,82,.38);
+}
+#cog-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;color:var(--moss);
+  max-width:0;opacity:0;
+  transition:max-width .55s cubic-bezier(.16,1,.3,1),opacity .38s ease,color .3s ease;
+}
+#cog.labelled #cog-label{max-width:220px;opacity:1}
+@media(hover:hover){#cog:hover #cog-label{color:var(--glow)}}
+.cog-mark{position:relative;width:42px;height:42px;display:grid;place-items:center;flex-shrink:0}
+/* the gear keeps turning, so the hover lift lives on the svg above it — both on
+   one element would have the transition fight the animation */
+#cog svg{display:block;width:34px;height:34px;overflow:visible;
+  transition:transform .4s cubic-bezier(.16,1,.3,1)}
+#cog .cog-outer{transform-origin:50% 50%;animation:cog-spin 26s linear infinite}
+@keyframes cog-spin{to{transform:rotate(360deg)}}
+
+/* the breathing glow — stays on the round mark, whatever shape the button is */
+.cog-mark::before{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  pointer-events:none;
+  animation:cog-breathe 4.2s ease-in-out infinite;
+}
+@keyframes cog-breathe{
+  0%,100%{box-shadow:none}
+  50%{box-shadow:0 0 8px rgba(107,140,82,.30),0 0 22px rgba(107,140,82,.16)}
+}
+/* two rings on arrival, so the eye catches it once, then it settles */
+.cog-mark::after{
+  content:'';position:absolute;inset:2px;border-radius:50%;
+  border:1px solid var(--moss);opacity:0;pointer-events:none;
+  animation:cog-ping 2.6s cubic-bezier(.16,1,.3,1) .9s 2;
+}
+@keyframes cog-ping{
+  0%{transform:scale(.7);opacity:.6}
+  70%{opacity:0}
+  100%{transform:scale(2.1);opacity:0}
+}
+@media(hover:hover){
+  #cog:hover{color:var(--glow)}
+  #cog:hover svg{transform:scale(1.1)}
+}
+#cog:focus-visible{outline:none;color:var(--glow)}
+#cog:focus-visible .cog-mark::before{box-shadow:0 0 0 1px var(--moss),0 0 12px rgba(107,140,82,.5)}
+#cog:active{transform:scale(.94)}
+#cog.open{color:var(--glow)}
+#cog.open .cog-mark::before,#cog.open .cog-mark::after{animation:none}
+#cog.open svg{transform:scale(1.1)}
+
+/* ── the panel ── */
+#panel{
+  position:fixed;z-index:39;
+  right:clamp(16px,2.4vw,30px);bottom:calc(clamp(16px,2.4vw,30px) + 62px);
+  width:min(366px,calc(100vw - 32px));
+  background:var(--ink);border:1px solid var(--line);
+  transform-origin:100% 100%;
+  transform:translateY(10px) scale(.96);opacity:0;visibility:hidden;
+  transition:transform .42s cubic-bezier(.16,1,.3,1),opacity .32s ease,visibility .42s,background var(--theme-dur),border-color var(--theme-dur);
+  box-shadow:0 1px 0 rgba(107,140,82,.10),0 18px 44px -18px rgba(0,0,0,.75),0 0 34px -14px rgba(107,140,82,.18);
+}
+#panel.open{transform:translateY(0) scale(1);opacity:1;visibility:visible}
+
+.pn-head{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:12px 16px;border-bottom:1px solid var(--line);
+  transition:border-color var(--theme-dur);
+}
+.pn-title{
+  font-family:var(--mono);font-size:10px;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--hi);transition:color var(--theme-dur);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.pn-badge{
+  font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--iris);display:inline-flex;align-items:center;gap:7px;flex-shrink:0;
+}
+/* display:inline-flex outranks the UA's [hidden]{display:none} — say it again */
+.pn-badge[hidden]{display:none}
+.pn-badge::before{
+  content:'';width:5px;height:5px;border-radius:50%;background:var(--iris);
+  animation:pulse-iris 2s ease-in-out infinite;
+}
+@keyframes pulse-iris{0%,100%{opacity:1}50%{opacity:.35}}
+
+.pn-group{padding:14px 16px;border-bottom:1px solid var(--line);transition:border-color var(--theme-dur)}
+.pn-group:last-child{border-bottom:none}
+.pn-label{
+  font-family:var(--mono);font-size:9px;letter-spacing:.36em;text-transform:uppercase;
+  color:var(--text-3);margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+  transition:color var(--theme-dur);
+}
+.pn-label::before{content:'';width:16px;height:1px;background:currentColor;flex-shrink:0}
+
+/* rows of actions */
+.pn-act{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
+  background:none;border:none;padding:9px 0;
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  color:var(--text-2);text-decoration:none;cursor:pointer;text-align:left;
+  transition:color .18s ease;
+}
+.pn-act span:last-child{color:var(--text-3);font-size:10px;transition:color .18s ease,transform .3s cubic-bezier(.16,1,.3,1)}
+@media(hover:hover){
+  .pn-act:hover{color:var(--bone)}
+  .pn-act:hover span:last-child{color:var(--moss);transform:translateX(3px)}
+}
+.pn-act:focus-visible{outline:none;color:var(--bone)}
+.pn-act:focus-visible span:last-child{color:var(--moss)}
+
+/* segmented switch — width toggle, mau's site/admin */
+.pn-seg{display:flex;border:1px solid var(--line);transition:border-color var(--theme-dur)}
+.pn-seg button{
+  flex:1;background:none;border:none;padding:8px 6px;cursor:pointer;
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--text-3);
+  transition:color .2s ease,background-color .2s ease;
+}
+.pn-seg button + button{border-left:1px solid var(--line)}
+@media(hover:hover){.pn-seg button:hover{color:var(--bone)}}
+.pn-seg button:focus-visible{outline:none;color:var(--bone)}
+.pn-seg button.on{color:var(--ink);background:var(--hi)}
+
+/* ── time controls (santos bluː) ── */
+#sc-controls-row{display:flex;flex-direction:column;gap:11px}
+.sc-row{display:flex;align-items:center;gap:12px}
+#sc-track-wrap{display:flex;align-items:center;gap:9px;flex:1}
+.sc-ep{
+  font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--text-3);flex-shrink:0;transition:color var(--theme-dur);
+}
+#sc-scrub{
+  flex:1;min-width:0;-webkit-appearance:none;appearance:none;
+  height:2px;border-radius:1px;outline:none;cursor:pointer;
+  background:linear-gradient(to right,var(--bone) var(--fill,0%),var(--line) var(--fill,0%));
+}
+#sc-scrub::-webkit-slider-thumb{-webkit-appearance:none;width:9px;height:9px;border-radius:50%;background:var(--bone);cursor:pointer}
+#sc-scrub::-moz-range-thumb{width:9px;height:9px;border-radius:50%;border:none;background:var(--bone);cursor:pointer}
+#sc-scrub:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px rgba(107,140,82,.4)}
+#sc-ff,#sc-playpause{
+  background:none;border:none;cursor:pointer;padding:0;flex-shrink:0;
+  display:flex;align-items:center;gap:5px;
+  font-family:var(--mono);color:var(--text-3);
+  transition:color .18s ease;
+}
+@media(hover:hover){#sc-ff:hover,#sc-playpause:hover{color:var(--bone)}}
+#sc-ff:focus-visible,#sc-playpause:focus-visible{outline:none;color:var(--bone)}
+#sc-ff-icon{display:block;width:14px;height:10px}
+#sc-pips{display:flex;align-items:flex-end;gap:2px;height:10px}
+.sc-pip{width:2px;border-radius:1px;background:var(--line);transition:background .14s cubic-bezier(.4,0,.2,1)}
+.sc-pip:nth-child(1){height:4px}.sc-pip:nth-child(2){height:6px}.sc-pip:nth-child(3){height:9px}
+#sc-ff[data-step="1"] .sc-pip:nth-child(1){background:var(--iris)}
+#sc-ff[data-step="2"] .sc-pip:nth-child(1),#sc-ff[data-step="2"] .sc-pip:nth-child(2){background:var(--iris)}
+#sc-ff[data-step="3"] .sc-pip{background:var(--bone)}
+#sc-ff[data-step="1"],#sc-ff[data-step="2"],#sc-ff[data-step="3"]{color:var(--text-2)}
+#sc-playpause svg{display:block;width:7px;height:10px}
+#sc-time{
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--text-3);
+  min-width:4.2ch;text-align:right;flex-shrink:0;transition:color var(--theme-dur);
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+}
+@media(max-width:520px){
+  #stage.narrow iframe{width:100%;border:none}
+}
+</style>
+</head>
+<body>
+
+<div id="stage"><div id="frame-slot" style="position:absolute;inset:0;display:flex"></div></div>
+
+<div id="veil">loading</div>
+
+<div id="blocked">
+  <h1 id="blocked-title">this site can't be embedded</h1>
+  <p>The server sends a header that blocks embedding, so the preview window can't display it. Open it directly instead.</p>
+  <a id="blocked-link" href="#" target="_blank" rel="noopener">open the site ↗</a>
+</div>
+
+<button id="cog" class="labelled" aria-expanded="false" aria-controls="panel">
+  <span id="cog-label">controls</span>
+  <span class="cog-mark">
+    <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <path class="cog-outer" stroke="currentColor" stroke-width="1" stroke-linejoin="round"
+        d="M 16.48 7.90 L 17.29 3.72 L 22.71 3.72 L 23.52 7.90 A 12.60 12.60 0 0 1 26.07 8.96 L 29.59 6.58 L 33.42 10.41 L 31.04 13.93 A 12.60 12.60 0 0 1 32.10 16.48 L 36.28 17.29 L 36.28 22.71 L 32.10 23.52 A 12.60 12.60 0 0 1 31.04 26.07 L 33.42 29.59 L 29.59 33.42 L 26.07 31.04 A 12.60 12.60 0 0 1 23.52 32.10 L 22.71 36.28 L 17.29 36.28 L 16.48 32.10 A 12.60 12.60 0 0 1 13.93 31.04 L 10.41 33.42 L 6.58 29.59 L 8.96 26.07 A 12.60 12.60 0 0 1 7.90 23.52 L 3.72 22.71 L 3.72 17.29 L 7.90 16.48 A 12.60 12.60 0 0 1 8.96 13.93 L 6.58 10.41 L 10.41 6.58 L 13.93 8.96 Z"/>
+    </svg>
+  </span>
+</button>
+
+<div id="panel" role="dialog" aria-label="Preview controls">
+  <div class="pn-head">
+    <span class="pn-title" id="pn-title">—</span>
+    <span class="pn-badge" id="pn-badge" hidden>in development</span>
+  </div>
+  <div id="pn-slots"></div>
+  <div class="pn-group">
+    <div class="pn-label">window</div>
+    <div class="pn-seg" id="seg-width">
+      <button data-w="full" class="on">Desktop</button>
+      <button data-w="narrow">Mobile</button>
+    </div>
+  </div>
+  <div class="pn-group">
+    <div class="pn-label">actions</div>
+    <button class="pn-act" id="act-reload"><span>reload the site</span><span>↻</span></button>
+    <a class="pn-act" id="act-raw" href="#" target="_blank" rel="noopener"><span>open directly</span><span>↗</span></a>
+    <a class="pn-act" id="act-back" href="/"><span>back to studio212</span><span>←</span></a>
+  </div>
+</div>
+
+<script>
+(()=>{
+  /* ── who are we previewing ── */
+  const PROJECTS={
+    1:{num:'04',label:'Arcetype',url:'https://thatsantosguy.github.io/arcetype/index.html',building:true},
+    2:{num:'01',label:'Osquello',url:'https://osquello.com'},
+    /* note: what the cog is actually holding — named, because "controls" on its
+       own never sounds worth a click */
+    3:{num:'02',label:'santos bluː',url:'https://santosblu.com',shaderControl:true,note:'time controls'},
+    /* demo: earthtown opens its artist surface for us on request — see the
+       handshake below. origin must be the exact scheme+host earthtown is served
+       from, since postMessage refuses to deliver to anything else. */
+    4:{num:'03',label:'Earthtown',url:'https://earthtown.life',building:true,
+       demo:true,origin:'https://earthtown.life',note:'admin controls'},
+    5:{num:'05',label:'Mau from Nowhere',url:'https://studio-212.github.io/mfn/',building:true,note:'site + admin panel',
+       tabs:[{k:'site',t:'Site',u:'https://studio-212.github.io/mfn/'},
+             {k:'admin',t:'Admin Panel',u:'https://studio-212.github.io/mfn/mock-admin.html'}]}
+  };
+
+  const id=new URLSearchParams(location.search).get('p');
+  const p=PROJECTS[id];
+  if(!p){location.replace('/');return;}
+
+  /* match the site's theme */
+  try{const t=localStorage.getItem('sb-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+
+  document.title=`${p.label} — preview`;
+  document.getElementById('pn-title').textContent=`${p.num} — ${p.label}`;
+  if(p.building)document.getElementById('pn-badge').hidden=false;
+  document.getElementById('act-raw').href=p.url;
+  document.getElementById('blocked-link').href=p.url;
+
+  /* ── the frame ── */
+  const slot=document.getElementById('frame-slot');
+  const stage=document.getElementById('stage');
+  const veil=document.getElementById('veil');
+  const frame=document.createElement('iframe');
+  frame.title=p.label;
+  frame.allow='autoplay; fullscreen; gyroscope; accelerometer; device-orientation; clipboard-write';
+  slot.appendChild(frame);
+
+  function refuse(){
+    veil.classList.add('gone');
+    document.getElementById('blocked').classList.add('show');
+    document.getElementById('blocked-title').textContent=`${p.label} can't be embedded`;
+  }
+
+  let loaded=false;
+  frame.addEventListener('load',()=>{
+    loaded=true;veil.classList.add('gone');
+    /* Ask earthtown to open its demo artist. It only listens to this exact
+       origin, and its frame-ancestors header means we're the only page that can
+       be its parent — so the switch has no URL and nothing to share. It grants
+       nothing real: every write is still refused at earthtown's edge. */
+    if(p.demo) frame.contentWindow?.postMessage({type:'et-demo'},p.origin);
+  });
+
+  /* A framing refusal can't be detected from out here — Chrome renders its own
+     block page inside the frame and fires load on it, so the frame looks
+     healthy while showing a grey error. Which sites refuse is knowable up
+     front, so it's carried in the data rather than guessed at runtime. */
+  if(p.noEmbed){
+    refuse();
+  }else{
+    frame.src=p.url;
+    /* still worth a fallback for anything that simply never arrives */
+    setTimeout(()=>{if(!loaded)refuse();},9000);
+  }
+
+  /* ── panel open/close ── */
+  const cog=document.getElementById('cog');
+  const panel=document.getElementById('panel');
+  const cogLabel=document.getElementById('cog-label');
+  cogLabel.textContent=p.note||'controls';
+  cog.setAttribute('aria-label',`Open ${p.note||'controls'}`);
+
+  function setPanel(open){
+    panel.classList.toggle('open',open);
+    cog.classList.toggle('open',open);
+    cog.setAttribute('aria-expanded',open);
+    cog.setAttribute('aria-label',(open?'Close ':'Open ')+(p.note||'controls'));
+    /* it only has to teach once — after that the label is in the way */
+    if(open)cog.classList.remove('labelled');
+  }
+  cog.addEventListener('click',()=>setPanel(!panel.classList.contains('open')));
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&panel.classList.contains('open')){setPanel(false);cog.focus();}
+  });
+  /* clicking into the iframe swallows the event, so also close on blur —
+     that's what a click on the site itself looks like from out here */
+  window.addEventListener('blur',()=>{
+    if(document.activeElement===frame)setPanel(false);
+  });
+
+  /* ── window width ── */
+  document.querySelectorAll('#seg-width button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('#seg-width button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      stage.classList.toggle('narrow',b.dataset.w==='narrow');
+    });
+  });
+
+  /* Where the project hands the visitor a sandbox, reloading quietly throws away
+     whatever they just built in it — a destructive button wearing a harmless
+     label. The demo is exactly what makes it destructive, so that's the flag. */
+  if(p.demo) document.getElementById('act-reload').remove();
+
+  document.getElementById('act-reload')?.addEventListener('click',()=>{
+    if(p.noEmbed)return;
+    loaded=false;veil.classList.remove('gone');
+    frame.src=frame.src;
+  });
+
+  /* ── per-project controls ── */
+  const slots=document.getElementById('pn-slots');
+
+  if(p.tabs){
+    const g=document.createElement('div');
+    g.className='pn-group';
+    g.innerHTML=`<div class="pn-label">view</div><div class="pn-seg" id="seg-tabs">${
+      p.tabs.map((t,i)=>`<button data-u="${t.u}"${i===0?' class="on"':''}>${t.t}</button>`).join('')
+    }</div>`;
+    slots.appendChild(g);
+    g.querySelectorAll('button').forEach(b=>{
+      b.addEventListener('click',()=>{
+        g.querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+        b.classList.add('on');
+        loaded=false;veil.classList.remove('gone');
+        frame.src=b.dataset.u;
+      });
+    });
+  }
+
+  if(p.shaderControl){
+    const g=document.createElement('div');
+    g.className='pn-group';
+    g.innerHTML=`
+      <div class="pn-label">time of day</div>
+      <div id="sc-controls-row">
+        <div class="sc-row">
+          <span class="sc-ep">dusk</span>
+          <div id="sc-track-wrap"><input id="sc-scrub" type="range" min="0" max="540" step="0.5" value="0" aria-label="Scrub time of day"></div>
+          <span class="sc-ep">dawn</span>
+        </div>
+        <div class="sc-row">
+          <button id="sc-playpause" aria-label="Pause"></button>
+          <button id="sc-ff" aria-label="Fast forward" data-step="0">
+            <svg id="sc-ff-icon" viewBox="0 0 18 14" width="14" height="10" fill="currentColor" aria-hidden="true"><polygon points="0,0 8,7 0,14"/><polygon points="9,0 18,7 9,14"/></svg>
+            <span id="sc-pips"><span class="sc-pip"></span><span class="sc-pip"></span><span class="sc-pip"></span></span>
+          </button>
+          <span style="flex:1"></span>
+          <span id="sc-time">+0:00</span>
+        </div>
+      </div>`;
+    slots.appendChild(g);
+    initShaderClock(frame);
+  }
+
+  /* ── shader clock ──
+     effectiveTime = shaderClock + offset (additive model)
+     play:   offset speed 0  → scrubber still, net animation = real time
+     paused: offset speed -1 → cancels the shader clock, animation frozen
+     FF:     offset speed >0 → net animation faster than real time          */
+  function initShaderClock(iframe){
+    const PAUSE_SVG='<svg viewBox="0 0 10 14" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.5" height="14" rx="0.5"/><rect x="6.5" y="0" width="3.5" height="14" rx="0.5"/></svg>';
+    const PLAY_SVG='<svg viewBox="0 0 11 14" fill="currentColor" aria-hidden="true"><polygon points="0,0 11,7 0,14"/></svg>';
+    const FF_SPEEDS=[3,18,75];
+    const PAUSE_DRIFT=-1;
+    let time=0,ffStep=0,paused=false,lastTs=null;
+    const scrub=document.getElementById('sc-scrub');
+    const pauseBtn=document.getElementById('sc-playpause');
+    const ffBtn=document.getElementById('sc-ff');
+    const timeEl=document.getElementById('sc-time');
+    pauseBtn.innerHTML=PAUSE_SVG;
+
+    const post=t=>iframe.contentWindow?.postMessage({type:'scrub',time:t},'https://santosblu.com');
+    const fmt=t=>{const m=Math.floor(t/60),s=Math.floor(t%60);return `+${m}:${s.toString().padStart(2,'0')}`;};
+    const setFill=t=>scrub.style.setProperty('--fill',(t/parseFloat(scrub.max)*100).toFixed(2)+'%');
+    const getSpeed=()=>paused?PAUSE_DRIFT:(ffStep>0?FF_SPEEDS[ffStep-1]:0);
+
+    function tick(ts){
+      const spd=getSpeed();
+      if(lastTs!=null&&spd!==0){
+        time=Math.max(0,Math.min(parseFloat(scrub.max),time+(ts-lastTs)/1000*spd));
+        scrub.value=time;timeEl.textContent=fmt(time);setFill(time);post(time);
+      }
+      lastTs=ts;
+      requestAnimationFrame(tick);
+    }
+
+    ffBtn.addEventListener('click',()=>{
+      ffStep=(ffStep+1)%(FF_SPEEDS.length+1);
+      if(paused){paused=false;pauseBtn.innerHTML=PAUSE_SVG;pauseBtn.setAttribute('aria-label','Pause');}
+      ffBtn.dataset.step=ffStep;lastTs=null;
+    });
+    pauseBtn.addEventListener('click',()=>{
+      paused=!paused;
+      if(paused)ffStep=0;
+      ffBtn.dataset.step=0;
+      pauseBtn.innerHTML=paused?PLAY_SVG:PAUSE_SVG;
+      pauseBtn.setAttribute('aria-label',paused?'Play':'Pause');
+      lastTs=null;
+    });
+    scrub.addEventListener('input',()=>{
+      time=parseFloat(scrub.value);timeEl.textContent=fmt(time);setFill(time);post(time);
+    });
+
+    post(time);
+    requestAnimationFrame(tick);
+  }
+})();
+</script>
+</body>
+</html>
