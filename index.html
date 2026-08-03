@@ -740,12 +740,13 @@ footer p{font-family:var(--mono);font-size:clamp(9px,.92vw,11px);letter-spacing:
 /* ── PLATES — the screenshots ────────────────────────────────── */
 .mag-hero-plate{
   position:relative;overflow:hidden;
-  width:100%;background:var(--faint);
-  /* 16/9 across a wide window is most of a screen, so the height is capped. Set
-     as a height rather than aspect-ratio + max-height: with both, Chrome keeps
-     the ratio by shrinking the width instead, which leaves the plate short of
-     its own edges. 56.25vw is the 16/9 height; object-fit crops past that. */
-  height:min(56.25vw,62vh,560px);
+  background:var(--faint);
+  /* The frame is never squashed and never cropped: the ratio is fixed, the
+     height is capped, and the width comes down with it — so past the cap the
+     plate simply gets smaller and sits in the middle of the page. */
+  aspect-ratio:16/9;
+  max-height:min(58vh,520px);
+  margin-inline:auto;
   border-bottom:1px solid var(--line);
   transition:background var(--theme-dur),border-color var(--theme-dur);
 }
@@ -864,7 +865,7 @@ html[data-theme="light"] .mag-hero-plate::after{
   .mag-footer{flex-direction:column;align-items:flex-start;gap:14px}
   .mag-plates{grid-template-columns:1fr}
   .mag-plate:nth-child(odd){border-right:none}
-  .mag-hero-plate{height:min(75vw,52vh)}
+  .mag-hero-plate{max-height:52vh}
 }
 @media(prefers-reduced-motion:reduce){
   .mag-plate-frame img,.mag-enter::after,.mag-enter-arrow{transition:none}
