@@ -988,38 +988,38 @@ END EASTER EGGS -->
   <div class="wk-head" data-reveal="rise">
     <span class="wk-label">Selected Work</span><span class="wk-count" id="wk-count">04 projects</span>
   </div>
-  <a class="proj-row" href="#" data-proj="2" data-modal="2">
-    <div class="row-bg"><canvas class="row-shader" id="shd2" aria-hidden="true"></canvas></div>
+  <a class="proj-row" href="#" data-proj="4" data-modal="4">
+    <div class="row-bg"><canvas class="row-shader" id="shd4" aria-hidden="true"></canvas></div>
     <div class="pr-num" data-reveal="rise" data-d="1">01</div>
     <div>
-      <div class="pr-name" data-reveal="wipe" data-d="1">Os<em>quello</em></div>
-      <div class="pr-tags" data-reveal="scatter" data-d="1"><span class="pr-tag">Music Release</span><span class="pr-tag">Retro Minimalist</span><span class="pr-tag">Easter Egg</span></div>
-      <div class="pr-oneliner" data-reveal="rise" data-d="2">The site is the artwork — visitors enter a space that reveals the record gradually.</div>
+      <div class="pr-name" data-reveal="wipe" data-d="1"><em>earth</em>town</div>
+      <div class="pr-tags" data-reveal="scatter" data-d="1"><span class="pr-tag">Browser OS</span><span class="pr-tag">Live Social</span><span class="pr-tag pr-live">Flagship</span></div>
+      <div class="pr-oneliner" data-reveal="rise" data-d="2">A WHOLE OPERATING SYSTEM IN THE BROWSER — windows, live rooms, shared listening, and admin tools you can drive yourself.</div>
+    </div>
+    <div></div>
+    <div class="pr-arrow go" data-reveal="rise" data-d="2">→</div>
+  </a>
+  <a class="proj-row" href="#" data-proj="2" data-modal="2">
+    <div class="row-bg"><canvas class="row-shader" id="shd2" aria-hidden="true"></canvas></div>
+    <div class="pr-num" data-reveal="rise" data-d="1">02</div>
+    <div>
+      <div class="pr-name" data-reveal="wipe" data-d="2">Os<em>quello</em></div>
+      <div class="pr-tags" data-reveal="scatter" data-d="2"><span class="pr-tag">Music Release</span><span class="pr-tag">Retro Minimalist</span><span class="pr-tag">Easter Egg</span></div>
+      <div class="pr-oneliner" data-reveal="rise" data-d="3">The site is the artwork — visitors enter a space that reveals the record gradually.</div>
     </div>
     <div></div>
     <div class="pr-arrow" data-reveal="rise" data-d="2">—</div>
   </a>
   <a class="proj-row" href="#" data-proj="3" data-modal="3">
     <div class="row-bg"><canvas class="row-shader" id="shd3" aria-hidden="true"></canvas></div>
-    <div class="pr-num" data-reveal="rise" data-d="1">02</div>
+    <div class="pr-num" data-reveal="rise" data-d="1">03</div>
     <div>
-      <div class="pr-name" data-reveal="wipe" data-d="2">santos <em>bluː</em></div>
-      <div class="pr-tags" data-reveal="scatter" data-d="2"><span class="pr-tag">Artist Site</span><span class="pr-tag">Atmospheric</span><span class="pr-tag">Personal</span></div>
-      <div class="pr-oneliner" data-reveal="rise" data-d="3">An atmospheric artist portal — gradual sunrise WebGL shader animation, audio player, locked archive.</div>
+      <div class="pr-name" data-reveal="wipe" data-d="3">santos <em>bluː</em></div>
+      <div class="pr-tags" data-reveal="scatter" data-d="3"><span class="pr-tag">Artist Site</span><span class="pr-tag">Atmospheric</span><span class="pr-tag">Personal</span></div>
+      <div class="pr-oneliner" data-reveal="rise" data-d="4">An atmospheric artist portal — gradual sunrise WebGL shader animation, audio player, locked archive.</div>
     </div>
     <div></div>
     <div class="pr-arrow" data-reveal="rise" data-d="2">—</div>
-  </a>
-  <a class="proj-row" href="#" data-proj="4" data-modal="4">
-    <div class="row-bg"><canvas class="row-shader" id="shd4" aria-hidden="true"></canvas></div>
-    <div class="pr-num" data-reveal="rise" data-d="1">03</div>
-    <div>
-      <div class="pr-name" data-reveal="wipe" data-d="3"><em>earth</em>town</div>
-      <div class="pr-tags" data-reveal="scatter" data-d="3"><span class="pr-tag">Browser OS</span><span class="pr-tag">Live Social</span><span class="pr-tag pr-live">Biggest project</span></div>
-      <div class="pr-oneliner" data-reveal="rise" data-d="4">A WHOLE OPERATING SYSTEM IN THE BROWSER — windows, live rooms, shared listening, and admin tools you can drive yourself.</div>
-    </div>
-    <div></div>
-    <div class="pr-arrow go" data-reveal="rise" data-d="2">→</div>
   </a>
   <div class="wk-divider" data-reveal="rise">
     <span>In Development</span>
@@ -1605,17 +1605,17 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
                                       Drop files in media/ and list them here;
                                       an empty array simply renders no plates. */
   const PROJECTS = {
-    2:{num:'01',label:'Osquello',titleHtml:'Os<em>quello</em>',tags:['Music Release','Retro Minimalist','Easter Egg'],url:'https://osquello.com',status:'live',
+    2:{num:'02',label:'Osquello',titleHtml:'Os<em>quello</em>',tags:['Music Release','Retro Minimalist','Easter Egg'],url:'https://osquello.com',status:'live',
       description:'A release site for Osquello\'s album, built in the visual language of the early-2000s web: system windows, hard edges, no smoothing. Rather than listing the record on a page, it spreads across a space visitors move through. A second album of outtakes is hidden inside it and downloads for anyone who finds it.',
       underHood:['The release is built as a piece of software — a menu, a media player, a readme file','The record is found by moving through the site rather than picked off a list','A second album hidden behind an unmarked link, for anyone who looks','Album sales handled by Stripe','One hand-built page: loads fast, nothing to maintain'],
       shots:[{src:'media/osquello.webm',cap:'the way in, unmarked and never in one place'}]
     },
-    3:{num:'02',label:'santos bluː',titleHtml:'santos <em>bluː</em>',tags:['Artist Site','Atmospheric','Personal'],url:'https://santosblu.com',status:'live',shaderControl:true,previewNote:'time controls',
+    3:{num:'03',label:'santos bluː',titleHtml:'santos <em>bluː</em>',tags:['Artist Site','Atmospheric','Personal'],url:'https://santosblu.com',status:'live',shaderControl:true,previewNote:'time controls',
       description:'An artist site for santos bluː. A WebGL shader takes the sky through a single arrival: it opens just past the peak, drains down into full night, and settles with the sun barely showing, then keeps drifting toward dawn. It also holds a custom music player and an archive locked behind a passphrase.',
       underHood:['The sky is drawn live, frame by frame, rather than being a looping video','It runs one full arc on arrival — light, then night, then first light — and keeps drifting after','Sky and water run on separate clocks, so the sky can be sped up without the water looking wrong','The time of day can be driven from outside the page — which is what the controls here do','A music player built into the site rather than an embed','A private archive behind a passphrase'],
       shots:[{src:'media/santosblu.webm',cap:'the arrival — peak, night, and back toward dawn'}]
     },
-    4:{num:'03',label:'Earthtown',titleHtml:'<em>earth</em>town',tags:['Browser OS','Live Social','Collective'],url:'https://earthtown.life',status:'live',previewNote:'admin controls',
+    4:{num:'01',label:'Earthtown',titleHtml:'<em>earth</em>town',tags:['Browser OS','Live Social','Collective'],url:'https://earthtown.life',status:'live',previewNote:'admin controls',
       description:[
         'A browser-based operating system for the Earthtown collective — windows, a dock, a menu bar, draggable files and a desktop members rearrange for themselves. It also runs live rooms, where members chat, see who else is online, and listen to the same track in sync.',
         'Opening it from here gives you the admin view. You can rearrange the desktop, upload files and switch apps off for visitors, then toggle to the visitor view to see the result. Saving and publishing are disabled, and nothing you change leaves your browser.'
