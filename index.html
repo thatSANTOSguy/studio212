@@ -883,7 +883,6 @@ html[data-theme="light"] .mag-hero-plate::after{
   <span class="ink-msg" id="ink-3">the right work<br>finds the right hands</span>
   <span class="ink-msg" id="ink-4" style="font-size:clamp(32px,4vw,56px);letter-spacing:.14em;width:auto">212</span>
   <span class="ink-msg" id="ink-5">concept first.<br>everything else follows.</span>
-  <span class="ink-msg" id="ink-6">arcetype was built<br>in six weeks</span>
   <span class="ink-msg" id="ink-7">most people<br>scroll past this</span>
   <span class="ink-msg" id="ink-8">still here</span>
 </div>
@@ -987,7 +986,7 @@ END EASTER EGGS -->
 
 <section id="work">
   <div class="wk-head" data-reveal="rise">
-    <span class="wk-label">Selected Work</span><span class="wk-count" id="wk-count">05 projects</span>
+    <span class="wk-label">Selected Work</span><span class="wk-count" id="wk-count">04 projects</span>
   </div>
   <a class="proj-row" href="#" data-proj="2" data-modal="2">
     <div class="row-bg"><canvas class="row-shader" id="shd2" aria-hidden="true"></canvas></div>
@@ -1011,9 +1010,6 @@ END EASTER EGGS -->
     <div></div>
     <div class="pr-arrow" data-reveal="rise" data-d="2">—</div>
   </a>
-  <div class="wk-divider" data-reveal="rise">
-    <span>In Development</span>
-  </div>
   <a class="proj-row" href="#" data-proj="4" data-modal="4">
     <div class="row-bg"><canvas class="row-shader" id="shd4" aria-hidden="true"></canvas></div>
     <div class="pr-num" data-reveal="rise" data-d="1">03</div>
@@ -1025,20 +1021,12 @@ END EASTER EGGS -->
     <div></div>
     <div class="pr-arrow go" data-reveal="rise" data-d="2">→</div>
   </a>
-  <a class="proj-row" href="#" data-proj="1" data-modal="1">
-    <div class="row-bg"><canvas class="row-shader" id="shd1" aria-hidden="true"></canvas></div>
-    <div class="pr-num" data-reveal="rise" data-d="1">04</div>
-    <div>
-      <div class="pr-name" data-reveal="wipe"><em>Arc</em>etype</div>
-      <div class="pr-tags" data-reveal="scatter"><span class="pr-tag">Fashion Brand</span><span class="pr-tag">Canvas UX</span><span class="pr-tag">E-commerce</span></div>
-      <div class="pr-oneliner" data-reveal="rise" data-d="2">A London fashion label platform — custom spray paint mechanic, Shopify integrated, concept-first design.</div>
-    </div>
-    <div></div>
-    <div class="pr-arrow" data-reveal="rise" data-d="2">—</div>
-  </a>
+  <div class="wk-divider" data-reveal="rise">
+    <span>In Development</span>
+  </div>
   <a class="proj-row" href="#" data-proj="5" data-modal="5">
     <div class="row-bg"><canvas class="row-shader" id="shd5" aria-hidden="true"></canvas></div>
-    <div class="pr-num" data-reveal="rise" data-d="1">05</div>
+    <div class="pr-num" data-reveal="rise" data-d="1">04</div>
     <div>
       <div class="pr-name" data-reveal="wipe" data-d="4">mau from <em>nowhere</em></div>
       <div class="pr-tags" data-reveal="scatter" data-d="4"><span class="pr-tag">Artist Site</span><span class="pr-tag">CMS</span><span class="pr-tag">Self-managed</span></div>
@@ -1317,23 +1305,6 @@ function makeShader(id,drawFn){
     tvx=((e.clientX-r.left)/r.width-.5)*r.width*PARALLAX;
   });
 }
-makeShader('shd1',(cv,ctx,t)=>{
-  const W=cv.width,H=cv.height;
-  ctx.clearRect(0,0,W,H);
-  ctx.strokeStyle='rgba(237,234,228,.12)';ctx.lineWidth=DPR*.5;
-  for(let x=0;x<W;x+=W/10){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-  for(let y=0;y<H;y+=H/6){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-  ctx.save();ctx.translate(W*.5,H*.5);ctx.rotate(t*.35);
-  const s=Math.min(W,H)*.32;
-  ctx.strokeStyle=`rgba(237,234,228,${.18+.06*Math.sin(t)})`;ctx.lineWidth=DPR;
-  ctx.beginPath();ctx.moveTo(-s,0);ctx.lineTo(s,0);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(0,-s);ctx.lineTo(0,s);ctx.stroke();
-  ctx.beginPath();ctx.arc(0,0,s*.62,0,Math.PI*2);ctx.strokeStyle=`rgba(237,234,228,${.09+.04*Math.sin(t*.7)})`;ctx.stroke();
-  ctx.restore();
-  const g=ctx.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,W*.4);
-  g.addColorStop(0,`rgba(139,111,255,${.12+.06*Math.sin(t*1.3)})`);g.addColorStop(1,'transparent');
-  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-});
 makeShader('shd2',(cv,ctx,t)=>{
   const W=cv.width,H=cv.height,MH=H*.5;
   ctx.clearRect(0,0,W,H);
@@ -1503,7 +1474,7 @@ vInp.addEventListener('blur',()=>voidEl.classList.remove('focused'));
 function firePulse(){pulseEl.classList.remove('fire');void pulseEl.offsetWidth;pulseEl.classList.add('fire');}
 function voidSend(){
   const v=vInp.value.trim();if(!v)return;addMsg(v,true);vInp.value='';firePulse();
-  if(/signal|transmission|blu|arcetype|osquello|earthtown/i.test(v))triggerEgg4();
+  if(/signal|transmission|blu|osquello|earthtown/i.test(v))triggerEgg4();
 }
 vInp.addEventListener('keydown',e=>{if(e.key==='Enter')voidSend();});
 
@@ -1634,12 +1605,6 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
                                       Drop files in media/ and list them here;
                                       an empty array simply renders no plates. */
   const PROJECTS = {
-    1:{num:'04',label:'Arcetype',titleHtml:'<em>Arc</em>etype',tags:['Fashion Brand','Canvas UX','E-commerce'],url:'https://thatsantosguy.github.io/arcetype/index.html',status:'building',
-      description:'A platform for a London fashion label operating at the edge of streetwear and conceptual design. The site features a custom click-and-drag spray paint mechanic inspired by Microsoft Paint alongside interchangeable image backdrops — a reflection of the brand\'s origins in one-of-one spray painted garments.',
-      ready:['Drag a product straight into the cart','Product pages, stock and checkout running on Shopify','The spray paint mechanic','Core site structure'],
-      building:['Final visual polish','Reworking the customising interface','Campaign and editorial pages'],
-      shots:[{src:'media/arcetype.webm',cap:'paint laid down, then a garment carried in'}]
-    },
     2:{num:'01',label:'Osquello',titleHtml:'Os<em>quello</em>',tags:['Music Release','Retro Minimalist','Easter Egg'],url:'https://osquello.com',status:'live',
       description:'A release site for Osquello\'s album, built in the visual language of the early-2000s web: system windows, hard edges, no smoothing. Rather than listing the record on a page, it spreads across a space visitors move through. A second album of outtakes is hidden inside it and downloads for anyone who finds it.',
       underHood:['The release is built as a piece of software — a menu, a media player, a readme file','The record is found by moving through the site rather than picked off a list','A second album hidden behind an unmarked link, for anyone who looks','Album sales handled by Stripe','One hand-built page: loads fast, nothing to maintain'],
@@ -1650,18 +1615,18 @@ document.addEventListener('visibilitychange',()=>{document.title=document.hidden
       underHood:['The sky is drawn live, frame by frame, rather than being a looping video','It runs one full arc on arrival — light, then night, then first light — and keeps drifting after','Sky and water run on separate clocks, so the sky can be sped up without the water looking wrong','The time of day can be driven from outside the page — which is what the controls here do','A music player built into the site rather than an embed','A private archive behind a passphrase'],
       shots:[{src:'media/santosblu.webm',cap:'the arrival — peak, night, and back toward dawn'}]
     },
-    4:{num:'03',label:'Earthtown',titleHtml:'<em>earth</em>town',tags:['Browser OS','Live Social','Collective'],url:'https://earthtown.life',status:'building',previewNote:'admin controls',
+    4:{num:'03',label:'Earthtown',titleHtml:'<em>earth</em>town',tags:['Browser OS','Live Social','Collective'],url:'https://earthtown.life',status:'live',previewNote:'admin controls',
       description:[
         'A browser-based operating system for the Earthtown collective — windows, a dock, a menu bar, draggable files and a desktop members rearrange for themselves. It also runs live rooms, where members chat, see who else is online, and listen to the same track in sync.',
         'Opening it from here gives you the admin view. You can rearrange the desktop, upload files and switch apps off for visitors, then toggle to the visitor view to see the result. Saving and publishing are disabled, and nothing you change leaves your browser.'
       ],
-      ready:['Windows, a dock and a menu bar — members arrange their own desktop','Live rooms: chat, who else is online, and music everyone hears in time','A character creator that cuts people out of their own photos','Everything is run from inside the site — upload, arrange, publish','Uploads are checked by the server, so nothing can be tampered with from a browser','A demo mode, so the admin tools can be tried without an account'],
-      building:['Keeping the shared music in time across devices, and showing who is listening','Moving the broadcast settings into the published content so they carry over','Notices from the admins that members can read but not edit'],
+      ready:['Windows, a dock and a menu bar — members arrange their own desktop','Live rooms: chat, who else is online, and music everyone hears in time','A character creator that cuts people out of their own photos','Everything is run from inside the site — upload, arrange, publish','Uploads are checked by the server, so nothing can be tampered with from a browser','The mailing list is kept inside the admin, and can be downloaded whenever it is needed'],
+      building:['Hand-drawn icons, so every window and file belongs to the world Earthtown is building rather than a stock desktop','A subscription model for exclusive content'],
       underHood:['Hosted on Cloudflare with media in object storage; Firebase runs only the live chat and accounts','No framework and no build step — content goes live without a developer','Photos are stripped of their location data in the browser before they ever upload','Edit, save and publish are separate steps, and publishing swaps the whole site at once, so nothing is left half-changed','The demo can only be switched on from this page, and can reach nothing on the server'],
       shots:[{src:'media/earthtown-desktop.webm',cap:'windows, dock and menu bar, moved around'},
              {src:'media/earthtown-admin.webm',inline:true,cap:'the admin view, and the same desktop as a visitor meets it'}]
     },
-    5:{num:'05',label:'Mau from Nowhere',titleHtml:'mau from <em>nowhere</em>',tags:['Artist Site','CMS','Self-managed'],url:'https://studio-212.github.io/mfn/',status:'building',previewNote:'site and admin panel',
+    5:{num:'04',label:'Mau from Nowhere',titleHtml:'mau from <em>nowhere</em>',tags:['Artist Site','CMS','Self-managed'],url:'https://studio-212.github.io/mfn/',status:'building',previewNote:'site and admin panel',
       description:'An artist site for Mau from Nowhere — a space that holds his music, visuals, and biography in a single atmospheric world. Built with a custom admin panel so Mau can upload and update content himself, without touching code.',
       ready:['An admin panel Mau updates the site from himself','Biography and press section','A structure for portraits and media'],
       building:['Awaiting content uploads from client'],
